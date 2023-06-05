@@ -28,21 +28,21 @@ def is_connected(name=str) -> bool:
 ############################################################################
 print("--- PROGRAM STARTED ---")
 print("--- SENSOR INITIALIZATION ---")
-is_connected_dict = [
-    {"CO2in"    : True},
-    {"CO2out"   : True},
-    {"TrHout"   : True},
-    {"TrHin"    : True},
-    {"TrHamb"   : True},
-    {"TrHcool"  : True},
-    {"Flow"     : True},
-    {"NH3in"    : True},
-    {"NH3out"   : True},
-    {"RTClock"  : True},
-    {"Scale"    : False},
-    {"IRcamera" : False},
-    {"Thermero" : False}
-]
+is_connected_dict = {
+    "CO2in"    : True,
+    "CO2out"   : True,
+    "TrHout"   : True,
+    "TrHin"    : True,
+    "TrHamb"   : True,
+    "TrHcool"  : True,
+    "Flow"     : True,
+    "NH3in"    : True,
+    "NH3out"   : True,
+    "RTClock"  : True,
+    "Scale"    : False,
+    "IRcamera" : False,
+    "Thermero" : False
+}
 
 print("Needed to control the process:")
 TCA = Multiplexer_TCA9548A("TCA")
@@ -58,7 +58,7 @@ MCP = ADC_MCP3008("MCP")
 NH3out = NH3_MQ137("NH3out", MCP)
 NH3in = NH3_MQ137("NH3in", MCP)
 print("Clock:")
-RTClock = RTC_DS1307("RTClock")
+# RTClock = RTC_DS1307("RTClock")
 print("Screen:")
 lcd = LCD_HD44780("LCD")
 print("Choosable sensors inside the chamber:")
@@ -182,7 +182,9 @@ while not process_is_started:
         print("Wrong choice. Please enter either 'y' or 'n'.")
 
 # Assert the correct starting of the process
-assert process_is_started, "Process started correctly."
+assert process_is_started, "Process started incorrectly."
+
+print("TO STOP THE PROCESS: CTRL + C")
 
 try:
     # Start the fans
@@ -206,31 +208,33 @@ try:
             else:
                 lcd.print_second(Flow, IRcamera, Thermero, Scale)
                 is_first_turn = not is_first_turn
+                
+            timestamp_LCD = time.time()
 
         if time.time() - timestamp_controller >= control_rate:
             controller.control(TrHamb, TrHin, TrHout, cooler, heater)
-
+                
+            timestamp_controller = time.time()
+            
         if time.time() - timestamp_save >= saving_rate:
-            print()
             ##TODO
+            timestamp_save = time.time()
 
 except KeyboardInterrupt:
     ################TODO 
     # call the saver for last point
     print("Last data saved.")
+    print("--- PROCESS TERMINATED ---")
 
+finally:
     print("--- CLEANUP STARTED ---")
     ventilation_fan.cleanup()
-    suction_fan()
+    suction_fan.cleanup()
     cooling_fan.cleanup()
     cooler.cleanup()
     heater.cleanup()
     lcd.cleanup()
-
-    print("--- CLEANUP COMPLETED ---")
-    print("--- PROCESS TERMINATED ---")
-    print("--- PROGRAM TERMINATED ---")
-
-finally:
-    # Cleanup of the pins
     GPIO.cleanup()
+    print("--- CLEANUP COMPLETED ---")
+    print("--- PROGRAM TERMINATED ---")
+    
