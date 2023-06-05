@@ -4,11 +4,12 @@ import numpy as np
 import time
 import csv
 
-from test_LCD import *
-from test_Chip import *
-from test_Sensor import *
-from test_Actuator import *
-from test_Controller import *
+from LCD_Class import *
+from Chip_Class import *
+from Sensor_Class import *
+from Actuator_Class import *
+from Controller_Class import *
+from Saver_Class import *
 
 GPIO.setmode(GPIO.BCM)
 
@@ -199,6 +200,7 @@ try:
     control_rate = 2
     timestamp_save = time.time()
     saving_rate = save_rate / 60 # converted to seconds
+    #########TODO LIST TO SAVE THE TIMESTAMPS
 
     while True:
         if time.time() - timestamp_LCD >= display_rate:
@@ -218,6 +220,7 @@ try:
             
         if time.time() - timestamp_save >= saving_rate:
             ##TODO
+            #### UPDATE TIMESTAMP LIST
             timestamp_save = time.time()
 
 except KeyboardInterrupt:

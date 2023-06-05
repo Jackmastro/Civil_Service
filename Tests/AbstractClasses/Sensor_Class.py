@@ -7,9 +7,9 @@ import time
 import math
 
 # Import the Chip abstract class
-from test_Chip import *
+from Chip_Class import *
 # Import the LCD class
-from test_LCD import *
+from LCD_Class import *
 # CO2 SCD30 library https://github.com/adafruit/Adafruit_CircuitPython_SCD30
 import adafruit_scd30
 # TrH AM2320 library https://learn.adafruit.com/am2315-encased-i2c-temperature-humidity-sensor/python-circuitpython
@@ -284,8 +284,7 @@ class NH3_MQ137(Sensor):
         Rl = 5.6 # kOhm. Value taken from hat schematics
         Ro = 141 # Value taken from calibration
         ref_16bit = 65472.0 # 10 bit scale with 6 digit shift
-        # Calculation taken from ###########################################################
-        ########### CORRECT DIVISION BY ZERO
+        # Calculation taken from https://ioct.tech/edu/sites/default/files/2019-04/MQ-2%20Gas%20Sensor%20--%20Educational.pdf
         Rs = float(Rl * (ref_16bit - self.sensor.value) / float(self.sensor.value))
 
         # NH3 sensitivity curve parameters: log(y) = m * log(x) + q
@@ -314,7 +313,7 @@ class Thermero_DS18B20(Sensor):
 
         self.unit = "°"
 
-        # Sensor dictionary with address as key and physical counter as value
+        # Sensor dictionary with address as key and Raspberry Pi ordered counter as value
         self.physical_order_dict = {
             "00000e743370": 12,  # A1
             "00000e74b77f": 3,   # A2

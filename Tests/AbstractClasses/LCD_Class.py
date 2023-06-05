@@ -14,7 +14,8 @@ class LCD_HD44780():
         print(f"Setup for {self.name} successfully completed.")
 
     def print_first(self, TrHin=None, TrHout=None, TrHamb=None, CO2in=None, CO2out=None, NH3in=None, NH3out=None) -> None:
-        
+        ############TODO ADD COOL AND MOVE CO2 AND NH3
+        # Clean the screen
         self.lcd.clear()
         
         # First row
@@ -108,7 +109,8 @@ class LCD_HD44780():
             self.lcd.write_string("-")
 
     def print_second(self, Flow=None, IRcamera=None, Thermero=None, Scale=None) -> None:
-        
+        #########################TODO aggiungere % del duy cycle
+        # Clean the screen
         self.lcd.clear()
         
         # First row
@@ -118,7 +120,7 @@ class LCD_HD44780():
         if Flow is not None:
             flow_value = Flow.read_data_point()
             self.lcd.cursor_pos = (0, 7)
-            self.lcd.write_string(str(round(flow_value, 2)))
+            self.lcd.write_string(str(round(flow_value, 2))) #########TODO CONVERT TO L/MIN
             self.lcd.cursor_pos = (0, 15)
             self.lcd.write_string("m/s")
         else:
@@ -146,7 +148,7 @@ class LCD_HD44780():
         if Scale is not None:
             scale_value = Scale.read_data_point()
             self.lcd.cursor_pos = (2, 7)
-            self.lcd.write_string(str(round(scale_value, 2)))
+            self.lcd.write_string(str(round(scale_value, 2))) ########TODO CONVERT TO KG AND LESS PRECISION
             self.lcd.cursor_pos = (2, 15)
             self.lcd.write_string("g")
         else:
