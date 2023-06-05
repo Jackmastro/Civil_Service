@@ -89,7 +89,7 @@ class Heater(Actuator):
         GPIO.setup(gpio_Heater_BCM, GPIO.OUT)
 
         pwm_frequency = 1 # Hz
-        self.pwm_duty_cycle = 0 # %
+        self.pwm_duty_cycle = 0.0 # %
         self.PWM = GPIO.PWM(gpio_Heater_BCM, pwm_frequency)
 
         print(f"Setup for {self.name} successfully completed.")
@@ -103,7 +103,7 @@ class Heater(Actuator):
         if is_on:
             self.PWM.start(self.pwm_duty_cycle)
         else:
-            self.pwm_duty_cycle = 0
+            self.pwm_duty_cycle = 0.0
             self.PWM.stop()
 
     def save_data_point(self):
@@ -116,7 +116,7 @@ class Heater(Actuator):
         self.pwm_duty_cycle = duty_cycle
         self.PWM.ChangeDutyCycle(duty_cycle)
 
-    def cleaunup(self):
+    def cleanup(self):
         self.PWM.stop()
 
         print(f"Cleanup for {self.name} successfully completed.")
@@ -164,61 +164,61 @@ class Heater(Actuator):
 
 ######################################################################################
 # heater = Heater("Heater")
-
+# 
 # try:
 #     Start_input = 'n'
-    
+#     
 #     while Start_input != 'y':
 #         # Get the input from user
 #         Start_input = input("Do you want to start the Heater? [y/n] \n")
-
+# 
 #         if Start_input == 'y':
 #             # Set GPIO pin to high
-#             heater.set_state("On")
+#             heater.set_state(True)
 #             print("Heater turned on")
 #         else:
 #             print("Heater not started")
-            
+#             
 #     while True:
 #         # Get the input from user
-#         PWM_input = int(input("What duty cycle in percentage from 0 to 99 do you want? \n"))
-
+#         PWM_input = float(input("What duty cycle in percentage from 0 to 99 do you want? \n"))
+# 
 #         # Check if the input is an int between 0 and 100 %
 #         if isinstance(PWM_input, int) and 0 <= PWM_input < 100:
 #             # Change duty cycle
 #             heater.set_duty_cycle(PWM_input)
 #             print("Duty cycle changed to", PWM_input)
-            
+#             
 #         elif isinstance(PWM_input, int) and PWM_input == 100:
 #             # Change duty cycle
 #             heater.set_duty_cycle(PWM_input)
 #             print("Duty cycle changed to", PWM_input)
 #             break
-        
+#         
 #         else:
 #             print("Please enter a valid integer between 0 and 99.")
-          
+#           
 #     Stop_input = 'n'
-    
+#     
 #     while Stop_input != 'y':
 #         # Get the input from user
 #         Stop_input = input("Do you want to turn off the Heater? [y/n] \n")
-
+# 
 #         if Stop_input == 'y':
 #             # Set GPIO pin to high
-#             heater.set_state("Off")
+#             heater.set_state(False)
 #             print("Heater turned off")
 #         else:
 #             print("Heater still running")
-
+# 
 #         # Wait time
 #         time.sleep(5.0)
-
+# 
 # except KeyboardInterrupt:
 #     print("\nKeyboard Interrupt: End program")
-    
+#     
 # finally:
-#     heater.set_state("Off")
+#     heater.set_state(False)
 #     # Clean up GPIO
 # #     GPIO.cleanup()
 

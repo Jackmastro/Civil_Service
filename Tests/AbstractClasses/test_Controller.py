@@ -43,7 +43,7 @@ class Controller():
     
     def calculate_humidity_ratio(self, relative_humidity=float, temperature=float) -> float:
         pressure = 101325.0  # Pa
-        psychrolib.SetUnitSystem("SI")
+        psychrolib.SetUnitSystem(psychrolib.SI)
         return psychrolib.GetHumRatioFromRelHum(TDryBulb=temperature, RelHum=relative_humidity/100, Pressure=pressure)
     
     def read_data_from_sensors(self, TrHamb, TrHin, TrHout) -> None:
@@ -103,7 +103,7 @@ class Controller():
         # Call the PID controller
         if self.next_dict['heater_state']:
             duty_cycle = self.pid_heater(self.T_in_value)
-            heater.set_duty_cycle(duty_cycle)
+            heater.set_duty_cycle(float(duty_cycle))
 
         # Update dictionaries
         self.previous_dict = self.next_dict
