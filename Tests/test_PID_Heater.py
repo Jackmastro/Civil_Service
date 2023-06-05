@@ -1,7 +1,6 @@
 import RPi.GPIO as GPIO
 import time
 from gpiozero import OutputDevice
-# PID library https://github.com/m-lundberg/simple-pid/tree/master
 from simple_pid import PID
 import board
 import adafruit_ahtx0
@@ -36,11 +35,11 @@ pwm_Heater.start(0)
 # Setpoint
 T_Heater = 27 
 # PID parameters
-Kp = 8.0
+Kp = 5
 Ki = 0.01
 Kd = 0
 # Controller object
-pid_Heater = PID(Kp, Ki, Kd, setpoint=T_Heater, output_limits=(0, 100))
+pid_Heater = PID(Kp, Ki, Kd, setpoint=T_Heater)
 
 try:
     while True:
