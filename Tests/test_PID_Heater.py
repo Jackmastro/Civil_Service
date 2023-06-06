@@ -35,11 +35,11 @@ pwm_Heater.start(0)
 # Setpoint
 T_Heater = 27 
 # PID parameters
-Kp = 5
+Kp = 8
 Ki = 0.01
 Kd = 0
 # Controller object
-pid_Heater = PID(Kp, Ki, Kd, setpoint=T_Heater)
+pid_Heater = PID(Kp, Ki, Kd, setpoint=T_Heater, output_limits=(0, 100))
 
 try:
     while True:
@@ -53,7 +53,7 @@ try:
         pwm_Heater.ChangeDutyCycle(pwm_output)
         
         # Wait time
-        time.sleep(1.0)
+        time.sleep(4.0)
 
 except KeyboardInterrupt:
     print("\nKeyboard Interrupt: Heater stopped")

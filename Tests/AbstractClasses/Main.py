@@ -182,9 +182,6 @@ while not process_is_started:
     else:
         print("Wrong choice. Please enter either 'y' or 'n'.")
 
-# Assert the correct starting of the process
-assert process_is_started, "Process started incorrectly."
-
 print("TO STOP THE PROCESS: CTRL + C")
 
 try:

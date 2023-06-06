@@ -33,9 +33,12 @@ TrH_cool = adafruit_ahtx0.AHTx0(tca[5])
 
 try: 
     while True:
-        
-        print(CO2_in.CO2, TrH_out.temperature, TrH_in.temperature, TrH_amb.temperature, TrH_cool.temperature)
-        print(CO2_out.CO2, TrH_out.relative_humidity, TrH_in.relative_humidity, TrH_amb.relative_humidity, TrH_cool.relative_humidity)
+        print(TrH_amb.temperature, TrH_amb.relative_humidity)
+        print(TrH_cool.temperature, TrH_cool.relative_humidity)
+        print(TrH_in.temperature, TrH_in.relative_humidity)
+        print(TrH_out.temperature, TrH_out.relative_humidity)
+#         print(CO2_in.CO2, TrH_out.temperature, TrH_in.temperature, TrH_amb.temperature, TrH_cool.temperature)
+#         print(CO2_out.CO2, TrH_out.relative_humidity, TrH_in.relative_humidity, TrH_amb.relative_humidity, TrH_cool.relative_humidity)
 
         time.sleep(5.0)
 
