@@ -5,8 +5,8 @@ import datetime
 from Sensor_Class import *
 
 class Saver:
-    def __init__(self, process_start_time=datetime) -> None:
-        self.name = process_start_time.strftime("%y%m%d_%H%M%S") + "_Measurements" # YYMMDD_HHMMSS_Measurements
+    def __init__(self, time_start_process=str) -> None:
+        self.name = time_start_process + "_Measurements" # YYMMDD_HHMMSS_Measurements
 
     def csv_generator(self, file_name=str, header=list, data=list) -> None:
         # Create the csv file giving the file name, header, and list data
@@ -32,6 +32,7 @@ class Saver:
 
         if IRcamera is not None:
             IR_data = IRcamera.data_table()
+            #### INSERT FIRST COLUMN FROM MAIN
             self.csv_generator(IR_file_name, IR_header, IR_data)
         else:
             print(f"{IRcamera.name} not attached.")
@@ -42,6 +43,7 @@ class Saver:
 
         if Thermero is not None:
             Thermero_data = Thermero.data_table()
+            ###### INSERT FIRST COLUMN FROM MAIN
             self.csv_generator(Thermero_file_name, Thermero_header, Thermero_data)
         else:
             print(f"{Thermero.name} not attached.")

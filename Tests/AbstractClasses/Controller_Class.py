@@ -88,11 +88,11 @@ class Controller():
         # Call the state machine
         self.next_dict = self.state_machine()
 
-        # Call the Cooler
+        # Set the Cooler
         if self.next_dict['cooler_state'] != self.previous_dict['cooler_state']:
             cooler.set_state(self.next_dict['cooler_state'])
 
-        # Call the Heater
+        # Set the Heater
         if self.next_dict['heater_state'] != self.previous_dict['heater_state']:
             heater.set_state(self.next_dict['heater_state'])
 
@@ -100,10 +100,11 @@ class Controller():
             if self.next_dict['heater_state']:
                 self.pid_heater.setpoint = self.next_dict['heater_Tref']
         
-        # Call the PID controller
+        # Call the PID controller and set the heater
         if self.next_dict['heater_state']:
             duty_cycle = self.pid_heater(self.T_in_value)
-            heater.set_duty_cycle(float(duty_cycle))
+            duty_cycle = round(float(duty_cycle), 2)
+            heater.set_duty_cycle(duty_cycle)
 
         # Update dictionaries
         self.previous_dict = self.next_dict

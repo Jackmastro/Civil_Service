@@ -1,8 +1,7 @@
 # GENERAL IMPORT
 import RPi.GPIO as GPIO
-import numpy as np
+import datetime
 import time
-import csv
 
 from LCD_Class import *
 from Chip_Class import *
@@ -182,8 +181,11 @@ while not process_is_started:
     else:
         print("Wrong choice. Please enter either 'y' or 'n'.")
 
-# Assert the correct starting of the process
-assert process_is_started, "Process started incorrectly."
+######################## TODO CALL THE RTC
+print("Saver:")
+time_start_process_datetime = datetime.now()
+time_start_process_str = time_start_process_datetime.strftime("%y%m%d_%H%M%S")
+# saver = Saver(time_start_process_str)
 
 print("TO STOP THE PROCESS: CTRL + C")
 
@@ -203,13 +205,13 @@ try:
     control_rate = 2
     timestamp_save = time.time()
     saving_rate = save_rate / 60 # converted to seconds
+
     #########TODO LIST TO SAVE THE TIMESTAMPS
 
     while True:
         print(heater.pwm_duty_cycle)
         print(TrHin.read_data_point())
-        time.sleep(3)
-        
+
         if time.time() - timestamp_LCD >= display_rate:
             if is_first_turn:
                 lcd.print_first(TrHin, TrHout, TrHamb, CO2in, CO2out, NH3in, NH3out)
@@ -227,12 +229,16 @@ try:
             
         if time.time() - timestamp_save >= saving_rate:
             ##TODO
+            ## CALL THE RTC AND UPDATE THE ENTRANCE OF A VECTOR IN THE MAIN
             #### UPDATE TIMESTAMP LIST
+            ### FOR LOOP TO DICTIONARY WITH ALL TRUE VALUES
+            # CALL THE SAVE_DATA OR SAVE_DATA_POINT??
             timestamp_save = time.time()
 
 except KeyboardInterrupt:
     ################TODO 
     # call the saver for last point
+    # saver.save
     print("Last data saved.")
     print("--- PROCESS TERMINATED ---")
 
@@ -244,7 +250,5 @@ finally:
     cooler.cleanup()
     heater.cleanup()
     lcd.cleanup()
-    GPIO.cleanup()
     print("--- CLEANUP COMPLETED ---")
     print("--- PROGRAM TERMINATED ---")
-    
