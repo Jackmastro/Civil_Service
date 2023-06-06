@@ -32,9 +32,9 @@ class Controller():
         }
 
         # PID parameters
-        Kp = 8.0
-        Ki = 0.01
-        Kd = 0
+        Kp = 6.0
+        Ki = 0.001
+        Kd = 0.0
 
         # Set PID object with ARW = Anti Reset Windup for the duty cycle [0-100]
         self.pid_heater = PID(Kp, Ki, Kd, output_limits=(0, 100))
