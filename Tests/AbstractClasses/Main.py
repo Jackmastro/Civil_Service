@@ -58,6 +58,8 @@ Flow = Flow_SFM3119("Flow")
 MCP = ADC_MCP3008("MCP")
 NH3out = NH3_MQ137("NH3out", MCP)
 NH3in = NH3_MQ137("NH3in", MCP)
+NH3out = None
+NH3in = None
 print("Clock:")
 # RTClock = RTC_DS1307("RTClock")
 print("Screen:")
@@ -241,7 +243,8 @@ finally:
     cooler.cleanup()
     heater.cleanup()
     lcd.cleanup()
-    GPIO.cleanup()
+    # NOT GPIO.cleanup(), the heater and cooler will turn on!
+    ################# FIND OUT HOW TO IMPLEMENT ACTIVE=LOW SO THAT THEY WILL TURN OFF WHEN CLEANUP IS CALLED
     print("--- CLEANUP COMPLETED ---")
     print("--- PROGRAM TERMINATED ---")
     

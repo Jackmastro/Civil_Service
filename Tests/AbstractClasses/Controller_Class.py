@@ -56,25 +56,31 @@ class Controller():
         if self.T_out_value <= self.Tref_out and self.rH_out_value <= self.rH_crit:
             # Cooling + Heating
             if self.w_amb_value >= self.w_in_crit:
+                print("Chill: Cooling + Heating")
                 return {'cooler_state': True, 'heater_state': True, 'heater_Tref': self.Tref_in}
             else:
                 # Heating
                 if self.T_amb_value <= self.Tref_in:
+                    print("Chill: Heating")
                     return {'cooler_state': False, 'heater_state': True, 'heater_Tref': self.Tref_in}
                 # Cooling (+ Heating)
                 else:
+                    print("Chill: Cooling + (Heating)")
                     return {'cooler_state': True, 'heater_state': True, 'heater_Tref': self.Tref_in}
         #PEAK PHASE
         elif self.T_out_value >= self.Tref_out or self.rH_out_value >= self.rH_crit:
             # Cooling + Heating
             if self.w_out_value >= self.w_out_crit:
+                print("Peak: Cooling + Heating")
                 return {'cooler_state': True, 'heater_state': True, 'heater_Tref': self.Tref_out}
             else:
                 # Heating
                 if self.T_out_value <= self.Tref_out:
+                    print("Peak: Heating")
                     return {'cooler_state': False, 'heater_state': True, 'heater_Tref': self.Tref_out}
                 # Cooling (+ Heating)
                 else:
+                    print("Peak: Cooling + (Heating)")
                     return {'cooler_state': True, 'heater_state': True, 'heater_Tref': self.Tref_out}
 
     def control(self, TrHamb, TrHin, TrHout, cooler, heater) -> None:
@@ -104,6 +110,8 @@ class Controller():
         if self.next_dict['heater_state']:
             duty_cycle = self.pid_heater(self.T_in_value)
             heater.set_duty_cycle(float(duty_cycle))
-
+            
+        print(self.previous_dict)
         # Update dictionaries
         self.previous_dict = self.next_dict
+        print(self.next_dict)

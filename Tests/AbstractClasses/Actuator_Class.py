@@ -72,6 +72,7 @@ class Cooler(Actuator):
 
         self.state = is_on
         GPIO.output(self.gpio_Cooler_BCM, GPIO.HIGH if is_on else GPIO.LOW)
+        print(is_on)
 
     def save_data_point(self):
         self.data_table.append(self.state)
