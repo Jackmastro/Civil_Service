@@ -164,7 +164,7 @@ class Flow_SFM3119(Sensor):
 
         print(f"Setup for {self.name} successfully completed.")
         
-    def read_data(self):
+    def read_data(self, type="L/min"):
         self.sensor.start_air_continuous_measurement()
         time.sleep(1) # needed to get data
         (air_flow, air_temperature, _) = self.sensor.read_measurement_data()
@@ -172,21 +172,27 @@ class Flow_SFM3119(Sensor):
         
         # Get value from pointers
         T_value = air_temperature.value
-        flow_value = air_flow.value
+        flow_value_Lmin = air_flow.value
 
         # Filter only positive values
-        if flow_value < 0:
-            flow_value = 0
+        if flow_value_Lmin < 0:
+            flow_value_Lmin = 0
         
-        # Perform conversion from L/min to m/s
-        area = (0.0166 / 2)**2 * np.pi # Taken from datasheet
-        conversion = 1 / 16670
-        flow_value = flow_value * conversion / area
-        data = [round(flow_value, 2), round(T_value, 2)]
-        return data
+        if type == "L/min":
+            data = [round(flow_value_Lmin, 2), round(T_value, 2)]
+            return data
+        
+        elif type == "m/s":
+            # Perform conversion from L/min to m/s
+            area = (0.0166 / 2)**2 * np.pi # Taken from datasheet
+            flow_value_ms = flow_value_Lmin / (area * 16670)
+            data = [round(flow_value_ms, 2), round(T_value, 2)]
+            return data
+        else:
+            raise ValueError('type has to be "L/min" or "m/s". Received: {}'.format(type))
 
-    def read_data_point(self):
-        [flow_value, _] = self.read_data()
+    def read_data_point(self, type="L/min"):
+        [flow_value, _] = self.read_data(type=type)
         return flow_value
     
     def save_data(self):

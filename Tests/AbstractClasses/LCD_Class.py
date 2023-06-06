@@ -118,11 +118,11 @@ class LCD_HD44780():
         self.lcd.write_string("Flow")
 
         if Flow is not None:
-            flow_value = Flow.read_data_point()
+            flow_value = Flow.read_data_point(type="L/min")
             self.lcd.cursor_pos = (0, 7)
-            self.lcd.write_string(str(round(flow_value, 2))) #########TODO CONVERT TO L/MIN
+            self.lcd.write_string(str(round(flow_value, 2)))
             self.lcd.cursor_pos = (0, 15)
-            self.lcd.write_string("m/s")
+            self.lcd.write_string("L/min")
         else:
             self.lcd.cursor_pos = (0, 7)
             self.lcd.write_string("-")
@@ -134,7 +134,7 @@ class LCD_HD44780():
         if IRcamera is not None:
             IRcam_value = IRcamera.read_data_point()
             self.lcd.cursor_pos = (1, 7)
-            self.lcd.write_string(str(round(IRcam_value, 2)))
+            self.lcd.write_string(str(int(IRcam_value)))
             self.lcd.cursor_pos = (1, 15)
             self.lcd.write_string("C")
         else:
@@ -148,9 +148,9 @@ class LCD_HD44780():
         if Scale is not None:
             scale_value = Scale.read_data_point()
             self.lcd.cursor_pos = (2, 7)
-            self.lcd.write_string(str(round(scale_value, 2))) ########TODO CONVERT TO KG AND LESS PRECISION
+            self.lcd.write_string(str(round(scale_value/1000, 2)))
             self.lcd.cursor_pos = (2, 15)
-            self.lcd.write_string("g")
+            self.lcd.write_string("kg")
         else:
             self.lcd.cursor_pos = (2, 7)
             self.lcd.write_string("-")
@@ -162,7 +162,7 @@ class LCD_HD44780():
         if Thermero is not None:
             Thermero_value = Thermero.read_data_point()
             self.lcd.cursor_pos = (3, 7)
-            self.lcd.write_string(str(round(Thermero_value, 2)))
+            self.lcd.write_string(str(int(Thermero_value)))
             self.lcd.cursor_pos = (3, 15)
             self.lcd.write_string("C")
         else:
