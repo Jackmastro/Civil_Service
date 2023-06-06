@@ -7,9 +7,9 @@ import psychrolib
 from simple_pid import PID
 
 # Import the Sensor abstract class
-from test_Sensor import *
+from Sensor_Class import *
 # Import the Actuator abstract class
-from test_Actuator import *
+from Actuator_Class import *
 
 class Controller():
     def __init__(self, name=str, Tref_in=float, Tref_out=float, rH_crit=float) -> None:

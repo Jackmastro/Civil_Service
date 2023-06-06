@@ -16,7 +16,8 @@ class Saver:
     def save_sensors(self, TrHin=None, TrHout=None, TrHamb=None, TrHcool=None, CO2in=None, CO2out=None, NH3in=None, NH3out=None, Flow=None, Scale=None) -> None:
         
         # Check if the sensor are connected
-        # if TrHin is not None:
+        if Scale is not None:
+            print("connected")
 
         # Merge data in a single list
 
