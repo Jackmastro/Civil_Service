@@ -187,8 +187,11 @@ print("TO STOP THE PROCESS: CTRL + C")
 try:
     # Start the fans
     ventilation_fan.set_state(is_on=True)
+    time.sleep(1)
     suction_fan.set_state(is_on=True)
+    time.sleep(1)
     cooling_fan.set_state(is_on=True)
+    time.sleep(1)
 
     timestamp_LCD = time.time()
     display_rate = 5
@@ -200,6 +203,10 @@ try:
     #########TODO LIST TO SAVE THE TIMESTAMPS
 
     while True:
+        print(heater.pwm_duty_cycle)
+        print(TrHin.read_data_point())
+        time.sleep(3)
+        
         if time.time() - timestamp_LCD >= display_rate:
             if is_first_turn:
                 lcd.print_first(TrHin, TrHout, TrHamb, CO2in, CO2out, NH3in, NH3out)
