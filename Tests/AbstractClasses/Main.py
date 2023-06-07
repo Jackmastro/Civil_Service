@@ -101,7 +101,7 @@ print("--- ACTUATOR INITIALIZATION COMPLETED ---")
 ############################################################################
 print("--- PARAMETERS INITIALIZATION ---")
 # Input reference temperature in °C
-Tref_in_min = 25
+Tref_in_min = 20
 Tref_in_max = 35
 
 while True:
@@ -118,7 +118,7 @@ while True:
         print("Invalid input. Please enter a valid float value.")
 
 # Output reference temperature in °C
-Tref_out_min = 25
+Tref_out_min = 20
 Tref_out_max = 35
 
 while True:
@@ -136,7 +136,7 @@ while True:
 
 # Critical relative humidity in %
 rH_crit_min = 50
-rH_crit_max = 70
+rH_crit_max = 90
 
 while True:
     input_choice_rH_crit = input("What critical RELATIVE HUMIDITY in %% do you want at the INLET of the chamber? [from {} to {}] ".format(rH_crit_min, rH_crit_max))

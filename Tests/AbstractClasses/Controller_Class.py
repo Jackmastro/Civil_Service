@@ -32,8 +32,8 @@ class Controller():
         }
 
         # PID parameters
-        Kp = 6.0
-        Ki = 0.001
+        Kp = 7.0
+        Ki = 0.008
         Kd = 0.0
 
         # Set PID object with ARW = Anti Reset Windup for the duty cycle [0-100]
