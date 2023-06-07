@@ -69,12 +69,13 @@ class CO2_SCD30(Sensor):
         print(f"Setup for {self.name} successfully completed.")
 
     def read_data(self):
-        data = [self.sensor.CO2, self.sensor.temperature, self.sensor.relative_humidity]
+        data = [self.sensor.CO2, None, None]
+        # data = [self.sensor.CO2, self.sensor.temperature, self.sensor.relative_humidity] # Uncomment to obtain temperature and relative humidity
         return np.round(data, 2)
     
     def read_data_point(self):
-        data_point = self.sensor.CO2
-        return round(data_point, 2)
+        [CO2_value, _, _] = self.read_data()
+        return round(CO2_value, 2)
     
     def save_data(self):
         self.data_table.append(self.read_data())
@@ -98,8 +99,8 @@ class TrH_AM2315C(Sensor):
         return np.round(data, 2)
     
     def read_data_point(self):
-        data_point = self.sensor.temperature
-        return np.round(data_point, 2)
+        [temperature_value, _] = self.read_data()
+        return np.round(temperature_value, 2)
 
     def save_data(self):
         self.data_table.append(self.read_data())
@@ -129,13 +130,13 @@ class IR_MLX90640(Sensor):
 
     def read_data(self):
         # Setup array for storing all 768 temperatures (24x32 pixels)
-        data = np.zeros((self.shape[0] * self.shape[1], 1))
-        self.sensor.getFrame(data)
-        return np.round(data, 2)
+        frame = np.zeros((self.shape[0] * self.shape[1], 1))
+        self.sensor.getFrame(frame)
+        return np.round(frame, 2)
     
     def read_data_point(self):
-        data_point_mean = np.mean(self.read_data())
-        return round(data_point_mean, 2)
+        temperature_mean = np.mean(self.read_data())
+        return round(temperature_mean, 2)
     
     def save_data(self):
         self.data_table.append(self.read_data()) # To convert data use: "np.reshape(data, self.shape)"
@@ -166,12 +167,12 @@ class Flow_SFM3119(Sensor):
         
     def read_data(self, type="L/min"):
         self.sensor.start_air_continuous_measurement()
-        time.sleep(1) # needed to get data
+        time.sleep(1) # Needed to get data
         (air_flow, air_temperature, _) = self.sensor.read_measurement_data()
         self.sensor.stop_continuous_measurement()
         
         # Get value from pointers
-        T_value = air_temperature.value
+        temperature_value = air_temperature.value
         flow_value_Lmin = air_flow.value
 
         # Filter only positive values
@@ -179,14 +180,16 @@ class Flow_SFM3119(Sensor):
             flow_value_Lmin = 0
         
         if type == "L/min":
-            data = [round(flow_value_Lmin, 2), round(T_value, 2)]
+            data = [round(flow_value_Lmin, 2), None]
+            # data = [round(flow_value_Lmin, 2), round(temperature_value, 2)] # Uncomment to obtain temperature
             return data
         
         elif type == "m/s":
             # Perform conversion from L/min to m/s
             area = (0.0166 / 2)**2 * np.pi # Taken from datasheet
             flow_value_ms = flow_value_Lmin / (area * 16670)
-            data = [round(flow_value_ms, 2), round(T_value, 2)]
+            data = [round(flow_value_ms, 2), None]
+            # data = [round(flow_value_ms, 2), round(temperature_value, 2)] # Uncomment to obtain temperature
             return data
         else:
             raise ValueError('type has to be "L/min" or "m/s". Received: {}'.format(type))
@@ -270,7 +273,7 @@ class Scale_HX711(Sensor):
         return round(data_point, 2)
     
     def save_data(self):
-        self.save_data_point()
+        self.data_point_table.append(self.read_data())
     
     def save_data_point(self):
         self.data_point_table.append(self.read_data_point())
@@ -307,7 +310,7 @@ class NH3_MQ137(Sensor):
         return round(data_point, 2)
     
     def save_data(self):
-        self.save_data_point()
+        self.data_point_table.append(self.read_data())
     
     def save_data_point(self):
         self.data_point_table.append(self.read_data_point())
@@ -359,8 +362,8 @@ class Thermero_DS18B20(Sensor):
         return np.round(data, 2)
 
     def read_data_point(self):
-        data_point_mean = np.mean(self.read_data())
-        return np.round(data_point_mean, 2)
+        temperature_mean = np.mean(self.read_data())
+        return np.round(temperature_mean, 2)
 
     def save_data(self):
         # Populate order_data_vec using advanced indexing

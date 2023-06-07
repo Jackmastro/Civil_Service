@@ -13,7 +13,7 @@ class Saver:
 
         print(f"CSV file '{file_name}' successfully created.")
 
-    def save_sensors(self, TrHin=None, TrHout=None, TrHamb=None, TrHcool=None, CO2in=None, CO2out=None, NH3in=None, NH3out=None, Flow=None, Scale=None) -> None:
+    def save_sensors(self, RTClock=None, TrHin=None, TrHout=None, TrHamb=None, TrHcool=None, CO2in=None, CO2out=None, NH3in=None, NH3out=None, Flow=None, Scale=None) -> None:
         
         # Check if the sensor are connected
         if Scale is not None:
@@ -26,13 +26,12 @@ class Saver:
         ###########TODO CHANGE ALL DATA_TABLE WITH TIME STAMP AS IN THE FIRST COLUMN
 
 
-    def save_IR(self, IRcamera=None) -> None:
+    def save_IRcamera(self, IRcamera=None) -> None:
         IR_file_name = self.name + "_IRcamera"
         IR_header = ['Time']
 
         if IRcamera is not None:
             IR_data = IRcamera.data_table()
-            #### INSERT FIRST COLUMN FROM MAIN
             self.csv_generator(IR_file_name, IR_header, IR_data)
         else:
             print(f"{IRcamera.name} not attached.")
@@ -43,7 +42,6 @@ class Saver:
 
         if Thermero is not None:
             Thermero_data = Thermero.data_table()
-            ###### INSERT FIRST COLUMN FROM MAIN
             self.csv_generator(Thermero_file_name, Thermero_header, Thermero_data)
         else:
             print(f"{Thermero.name} not attached.")
