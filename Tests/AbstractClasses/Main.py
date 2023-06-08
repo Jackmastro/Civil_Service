@@ -1,8 +1,7 @@
 # GENERAL IMPORT
 import RPi.GPIO as GPIO
-import numpy as np
+import datetime
 import time
-import csv
 
 from LCD_Class import *
 from Chip_Class import *
@@ -29,34 +28,43 @@ def is_connected(name=str) -> bool:
 ############################################################################
 print("--- PROGRAM STARTED ---")
 print("--- SENSOR INITIALIZATION ---")
-is_connected_dict = {
-    "CO2in"    : True,
-    "CO2out"   : True,
-    "TrHout"   : True,
-    "TrHin"    : True,
-    "TrHamb"   : True,
-    "TrHcool"  : True,
-    "Flow"     : True,
-    "NH3in"    : True,
-    "NH3out"   : True,
-    "RTClock"  : True,
-    "Scale"    : False,
-    "IRcamera" : False,
-    "Thermero" : False
+
+overview_sensor_dict = {
+    "CO2in":     {"is_connected": True,  "sensor": None},
+    "CO2out":    {"is_connected": True,  "sensor": None},
+    "TrHout":    {"is_connected": True,  "sensor": None},
+    "TrHin":     {"is_connected": True,  "sensor": None},
+    "TrHamb":    {"is_connected": True,  "sensor": None},
+    "TrHcool":   {"is_connected": True,  "sensor": None},
+    "Flow":      {"is_connected": True,  "sensor": None},
+    "NH3in":     {"is_connected": True,  "sensor": None},
+    "NH3out":    {"is_connected": True,  "sensor": None},
+    "RTClock":   {"is_connected": True,  "sensor": None},
+    "Scale":     {"is_connected": False, "sensor": None},
+    "IRcamera":  {"is_connected": False, "sensor": None},
+    "Thermero":  {"is_connected": False, "sensor": None}
 }
 
 print("Needed to control the process:")
 TCA = Multiplexer_TCA9548A("TCA")
 TrHin = TrH_AM2315C("TrHin", TCA)
+overview_sensor_dict["TrHin"]["sensor"] = TrHin
 TrHout = TrH_AM2315C("TrHout", TCA)
+overview_sensor_dict["TrHout"]["sensor"] = TrHout
 TrHamb = TrH_AM2315C("TrHamb", TCA)
+overview_sensor_dict["TrHamb"]["sensor"] = TrHamb
 TrHcool = TrH_AM2315C("TrHcool", TCA)
+overview_sensor_dict["TrHcool"]["sensor"] = TrHcool
 print("Other sensors:")
 CO2in = CO2_SCD30("CO2in", TCA)
+overview_sensor_dict["CO2in"]["sensor"] = CO2in
 CO2out = CO2_SCD30("CO2out", TCA)
+overview_sensor_dict["CO2out"]["sensor"] = CO2out
 Flow = Flow_SFM3119("Flow")
+overview_sensor_dict["Flow"]["sensor"] = Flow
 MCP = ADC_MCP3008("MCP")
 NH3out = NH3_MQ137("NH3out", MCP)
+overview_sensor_dict["NH3out"]["sensor"] = NH3out
 NH3in = NH3_MQ137("NH3in", MCP)
 NH3out = None
 NH3in = None
@@ -67,20 +75,23 @@ lcd = LCD_HD44780("LCD")
 print("Choosable sensors inside the chamber:")
 # Scale
 if is_connected("Scale"):
-    is_connected_dict["Scale"] = True
+    overview_sensor_dict["Scale"]["is_connected"] = True
     Scale = Scale_HX711("Scale")
+    overview_sensor_dict["Scale"]["sensor"] = Scale
 else:
     Scale = None
 # IR camera
 if is_connected("IRcamera"):
-    is_connected_dict["IRcamera"] = True
+    overview_sensor_dict["IRcamera"]["is_connected"] = True
     IRcamera = IR_MLX90640("IRcamera")
+    overview_sensor_dict["IRcamera"]["sensor"] = IRcamera
 else:
     IRcamera = None
 # Thermero
 if is_connected("Thermero"):
-    is_connected_dict["Thermero"] = True
+    overview_sensor_dict["Thermero"]["is_connected"] = True
     Thermero = Thermero_DS18B20("Thermero")
+    overview_sensor_dict["Thermero"]["sensor"] = Thermero
 else:
     Thermero = None
 
@@ -162,8 +173,8 @@ while True:
     input_choice_save_rate = input("How often do you want to SAVE the data in minutes? [from {}] ".format(save_rate_min))
     
     try:
-        save_rate = max(save_rate_min, float(input_choice_save_rate))
-        print("Save rate set:", save_rate, "min")
+        saving_rate_min = max(save_rate_min, float(input_choice_save_rate))
+        print("Save rate set:", saving_rate_min, "min")
         break  # Exit the loop if a valid input is provided
     except ValueError:
         print("Invalid input. Please enter a valid float value.")
@@ -184,32 +195,36 @@ while not process_is_started:
     else:
         print("Wrong choice. Please enter either 'y' or 'n'.")
 
+######################## TODO CALL THE RTC
+print("Saver:")
+# time_start_process_datetime = datetime.now()
+# time_start_process_str = time_start_process_datetime.strftime("%y%m%d_%H%M%S")
+# saver = Saver(time_start_process_str)
+
 print("TO STOP THE PROCESS: CTRL + C")
 
 try:
     # Start the fans
     ventilation_fan.set_state(is_on=True)
-    time.sleep(1)
+    time.sleep(1) # Needed
     suction_fan.set_state(is_on=True)
-    time.sleep(1)
+    time.sleep(1) # Needed
     cooling_fan.set_state(is_on=True)
-    time.sleep(1)
+    time.sleep(1) # Needed
 
-    timestamp_LCD = time.time()
+    time_last_save_LCD = time.time()
     display_rate = 5
     is_first_turn = True
-    timestamp_controller = time.time()
+    time_last_save_controller = time.time()
     control_rate = 2
-    timestamp_save = time.time()
-    saving_rate = save_rate / 60 # converted to seconds
-    #########TODO LIST TO SAVE THE TIMESTAMPS
+    time_last_save_saving = time.time()
+    saving_rate = saving_rate_min / 60 # converted to seconds
 
     while True:
         print(heater.pwm_duty_cycle)
         print(TrHin.read_data_point())
-        time.sleep(3)
-        
-        if time.time() - timestamp_LCD >= display_rate:
+
+        if time.time() - time_last_save_LCD >= display_rate:
             if is_first_turn:
                 lcd.print_first(TrHin, TrHout, TrHamb, CO2in, CO2out, NH3in, NH3out)
                 is_first_turn = not is_first_turn
@@ -217,21 +232,24 @@ try:
                 lcd.print_second(Flow, IRcamera, Thermero, Scale)
                 is_first_turn = not is_first_turn
                 
-            timestamp_LCD = time.time()
+            time_last_save_LCD = time.time()
 
-        if time.time() - timestamp_controller >= control_rate:
+        if time.time() - time_last_save_controller >= control_rate:
             controller.control(TrHamb, TrHin, TrHout, cooler, heater)
                 
-            timestamp_controller = time.time()
+            time_last_save_controller = time.time()
             
-        if time.time() - timestamp_save >= saving_rate:
-            ##TODO
-            #### UPDATE TIMESTAMP LIST
-            timestamp_save = time.time()
+        if time.time() - time_last_save_saving >= saving_rate:
+            [sensor["sensor"].save_data() for sensor in overview_sensor_dict if sensor["is_connected"]]
+
+            time_last_save_saving = time.time()
 
 except KeyboardInterrupt:
     ################TODO 
-    # call the saver for last point
+    # call the savers for last point
+    # saver.save_sensors()
+    # saver.save_IRcamera()
+    # saver.save_Thermero()
     print("Last data saved.")
     print("--- PROCESS TERMINATED ---")
 
@@ -247,4 +265,3 @@ finally:
     ################# FIND OUT HOW TO IMPLEMENT ACTIVE=LOW SO THAT THEY WILL TURN OFF WHEN CLEANUP IS CALLED
     print("--- CLEANUP COMPLETED ---")
     print("--- PROGRAM TERMINATED ---")
-    

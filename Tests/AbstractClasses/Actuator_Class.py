@@ -15,7 +15,7 @@ class Actuator(ABC):
         pass
 
     @abstractmethod
-    def save_data_point(self) -> None:
+    def save_data(self) -> None:
         pass
 
     @abstractmethod
@@ -48,8 +48,8 @@ class Fan(Actuator):
         self.state = is_on
         GPIO.output(self.gpio_BCM, GPIO.LOW if is_on else GPIO.HIGH)
     
-    def save_data_point(self):
-        self.data_table.append(self.state)
+    def save_data(self):
+        self.data_table.append(int(self.state))
 
     def cleanup(self):
         GPIO.output(self.gpio_BCM, GPIO.HIGH)
@@ -74,8 +74,8 @@ class Cooler(Actuator):
         GPIO.output(self.gpio_Cooler_BCM, GPIO.HIGH if is_on else GPIO.LOW)
         print(is_on)
 
-    def save_data_point(self):
-        self.data_table.append(self.state)
+    def save_data(self):
+        self.data_table.append(int(self.state))
 
     def cleanup(self):
         GPIO.output(self.gpio_Cooler_BCM, GPIO.LOW)
@@ -107,7 +107,7 @@ class Heater(Actuator):
             self.pwm_duty_cycle = 0.0
             self.PWM.stop()
 
-    def save_data_point(self):
+    def save_data(self):
         self.data_table.append(self.pwm_duty_cycle)
 
     def set_duty_cycle(self, duty_cycle) -> None:
