@@ -205,11 +205,11 @@ print("TO STOP THE PROCESS: CTRL + C")
 try:
     # Start the fans
     ventilation_fan.set_state(is_on=True)
-    time.sleep(1)
+    time.sleep(1) # Needed
     suction_fan.set_state(is_on=True)
-    time.sleep(1)
+    time.sleep(1) # Needed
     cooling_fan.set_state(is_on=True)
-    time.sleep(1)
+    time.sleep(1) # Needed
 
     time_last_save_LCD = time.time()
     display_rate = 5

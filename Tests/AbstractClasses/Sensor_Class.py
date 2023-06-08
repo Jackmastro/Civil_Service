@@ -122,13 +122,14 @@ class IR_MLX90640(Sensor):
 
         # Setup refresh rate. The camera captures data at a rates defined in RefreshRate class (available: 0_5,1,2,4,8,16,32,64).
         self.sensor.refresh_rate = adafruit_mlx90640.RefreshRate.REFRESH_2_HZ
-
+############################TODO CHECK IF WORKS ALSO WITHOUT
         print(f"Setup for {self.name} successfully completed.")
 
     def read_data(self):
         # Setup array for storing all 768 temperatures (24x32 pixels)
         frame = np.zeros((self.shape[0] * self.shape[1], 1))
         self.sensor.getFrame(frame)
+        frame = np.ravel(frame) # Flatten to 1x768
         return np.round(frame, 2)
     
     def read_data_point(self):
@@ -145,7 +146,7 @@ class Flow_SFM3119(Sensor):
     def __init__(self, name=str) -> None:
         super().__init__(name)
 
-        self.unit = "m/s"
+        self.unit = "L/min"
         
         parser = argparse.ArgumentParser()
         parser.add_argument('--i2c_port', '-p', default='/dev/i2c-1')
@@ -181,6 +182,8 @@ class Flow_SFM3119(Sensor):
             return data
         
         elif type == "m/s":
+            self.unit = type
+            
             # Perform conversion from L/min to m/s
             area = (0.0166 / 2)**2 * np.pi # Taken from datasheet
             flow_value_ms = flow_value_Lmin / (area * 16670)
@@ -268,7 +271,7 @@ class Scale_HX711(Sensor):
         return np.round(data_point, 2)
     
     def save_data(self):
-        self.data_point_table.append(self.read_data())
+        self.data_table.append(self.read_data_point()) # Interested in g values
     
     def save_data_point(self):
         self.data_point_table.append(self.read_data_point())
@@ -305,7 +308,7 @@ class NH3_MQ137(Sensor):
         return np.round(data_point, 2)
     
     def save_data(self):
-        self.data_point_table.append(self.read_data())
+        self.data_table.append(self.read_data())
     
     def save_data_point(self):
         self.data_point_table.append(self.read_data_point())
@@ -316,6 +319,9 @@ class Thermero_DS18B20(Sensor):
         super().__init__(name)
 
         self.unit = "°"
+
+        gpio_Thermero_BCM = 4 #7
+        GPIO.setup(gpio_Thermero_BCM, GPIO.IN)
 
         # Sensor dictionary with address as key and Raspberry Pi ordered counter as value
         self.physical_order_dict = {
@@ -341,12 +347,6 @@ class Thermero_DS18B20(Sensor):
             "00000e9b86f4": 10   # D5 "00000e72e2b9"
         }
 
-        # Set GPIO pin number
-        gpio_Thermero_BCM = 4 #7
-
-        # Set GPIO pin as input
-        GPIO.setup(gpio_Thermero_BCM, GPIO.IN)
-
         # Set all the 1-wire temperature sensors
         self.sensor = W1ThermSensor.get_available_sensors([SensorType.DS18B20])
 
@@ -354,6 +354,7 @@ class Thermero_DS18B20(Sensor):
 
     def read_data(self):
         data = [single_sensor.get_temperature() for single_sensor in self.sensor]
+        data = np.ravel(data) # Flatten to 1x20
         return np.round(data, 2)
 
     def read_data_point(self):
@@ -362,7 +363,7 @@ class Thermero_DS18B20(Sensor):
 
     def save_data(self):
         # Populate order_data_vec using advanced indexing
-        order_data_vec = np.zeros((len(self.physical_order_dict) + 1, 1))  # 20 sensors in total
+        order_data_vec = np.zeros((1, 20))  # 20 sensors in total
         order_data_vec[[value - 1 for value in self.physical_order_dict.values()]] = self.read_data(self) # Python indexing: value reduced by 1
         self.data_table.append(order_data_vec)
 
