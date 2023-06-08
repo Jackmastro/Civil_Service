@@ -8,7 +8,7 @@ from Chip_Class import *
 from Sensor_Class import *
 from Actuator_Class import *
 from Controller_Class import *
-# from Saver_Class import *
+from Saver_Class import *
 
 GPIO.setmode(GPIO.BCM)
 
@@ -69,7 +69,7 @@ NH3in = NH3_MQ137("NH3in", MCP)
 NH3out = None
 NH3in = None
 print("Clock:")
-# RTClock = RTC_DS1307("RTClock")
+RTClock = RTC_DS1307("RTClock")
 print("Screen:")
 lcd = LCD_HD44780("LCD")
 print("Choosable sensors inside the chamber:")
@@ -197,9 +197,10 @@ while not process_is_started:
 
 ######################## TODO CALL THE RTC
 print("Saver:")
-# time_start_process_datetime = datetime.now()
-# time_start_process_str = time_start_process_datetime.strftime("%y%m%d_%H%M%S")
-# saver = Saver(time_start_process_str)
+t = RTClock.read_data_point()
+time_start_process_str = "{}_{}_{}_{}_{}_{}".format(t.tm_year, t.tm_mon, t.tm_mday, t.tm_hour, t.tm_min, t.tm_sec)
+print(time_start_process_str)
+saver = Saver(time_start_process_str)
 
 print("TO STOP THE PROCESS: CTRL + C")
 
@@ -245,11 +246,10 @@ try:
             time_last_save_saving = time.time()
 
 except KeyboardInterrupt:
-    ################TODO 
-    # call the savers for last point
-    # saver.save_sensors()
-    # saver.save_IRcamera()
-    # saver.save_Thermero()
+    # Call the savers for last point
+    saver.save_sensors()
+    saver.save_IRcamera()
+    saver.save_Thermero()
     print("Last data saved.")
     print("--- PROCESS TERMINATED ---")
 
@@ -262,6 +262,12 @@ finally:
     heater.cleanup()
     lcd.cleanup()
     # NOT GPIO.cleanup(), the heater and cooler will turn on!
-    ################# FIND OUT HOW TO IMPLEMENT ACTIVE=LOW SO THAT THEY WILL TURN OFF WHEN CLEANUP IS CALLED
     print("--- CLEANUP COMPLETED ---")
     print("--- PROGRAM TERMINATED ---")
+    
+#     Traceback (most recent call last):
+#   File "/home/pi/Civil_Service/Tests/AbstractClasses/Main.py", line 244, in <module>
+#     [sensor["sensor"].save_data() for sensor in overview_sensor_dict if sensor["is_connected"]]
+#   File "/home/pi/Civil_Service/Tests/AbstractClasses/Main.py", line 244, in <listcomp>
+#     [sensor["sensor"].save_data() for sensor in overview_sensor_dict if sensor["is_connected"]]
+# TypeError: string indices must be integers

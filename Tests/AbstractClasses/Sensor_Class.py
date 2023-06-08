@@ -217,10 +217,10 @@ class RTC_DS1307(Sensor): ###############################TODO
         print(f"Setup for {self.name} successfully completed.")
         
     def read_data(self):
-        pass ###################################TODO
+        self.read_data_point()
     
     def read_data_point(self):
-        pass ################################TODO
+        return self.sensor.datetime
     
     def save_data(self):
         self.data_table.append(self.read_data())

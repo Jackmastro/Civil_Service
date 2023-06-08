@@ -1,3 +1,4 @@
+# For data restructuring https://pypi.org/project/pandas/
 import pandas as pd
 import time
 import os
@@ -75,5 +76,6 @@ class Saver:
             print(f"{Thermero.name} not connected.")
 
 ################################
-time_experiment = time.struct_time((2023, 6, 5, 15, 14, 15, 0, -1, -1)) # update da RTC
-saver = Saver(time_experiment)
+            
+# time_experiment = 
+# saver = Saver(time_experiment)

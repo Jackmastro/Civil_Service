@@ -108,7 +108,7 @@ class Controller():
         
         # Call the PID controller and set the heater
         if self.next_dict['heater_state']:
-            duty_cycle = self.pid_heater(self.T_in_value)
+            duty_cycle = self.pid_heater(self.T_in_value) ##########TODO SECOND CONTROLLER
             
         print(self.previous_dict)
         duty_cycle = round(float(duty_cycle), 2)
