@@ -1,5 +1,6 @@
 import pandas as pd
 import time
+import os
 
 from Sensor_Class import *
 
@@ -9,62 +10,41 @@ class Saver:
 
         print("Setup for saver successfully completed.")
 
-    def csv_generator(self, file_name=str, data_frame=None) -> None:
+    def generate_csv(self, file_name=str, data_frame=None) -> None:
         # Create the csv file giving the file name, header, and list data
 
-        file_path = file_name + ".csv"
+        folder_path = '../Data'
+        os.makedirs(folder_path, exist_ok=True)
+        file_path = os.path.join(folder_path, file_name + ".csv")
 
         data_frame.to_csv(file_path, index=False)
 
         print(f"CSV file '{file_name}' successfully created.")
 
-    def save_sensors(self, RTClock=None, TrHamb=None, TrHcool=None, TrHin=None, TrHout=None, CO2in=None, CO2out=None, NH3in=None, NH3out=None, Flow=None, Scale=None) -> None:
+    def save_sensor_data(self, RTClock=None, TrHamb=None, TrHcool=None, TrHin=None, TrHout=None, CO2in=None, CO2out=None, NH3in=None, NH3out=None, Flow=None, Scale=None) -> None:
         clock_header = ['Time']
         clock_data_frame = pd.DataFrame(RTClock.data_table, columns=clock_header)
 
-        TrHamb_header = ['Tamb', 'rHamb']
-        TrHamb_data_frame = pd.DataFrame(TrHamb.data_table, columns=TrHamb_header)
+        data_frames = [clock_data_frame]
 
-        TrHcool_header = ['Tcool', 'rHcool']
-        TrHcool_data_frame = pd.DataFrame(TrHcool.data_table, columns=TrHcool_header)
+        sensor_list = [TrHamb, TrHcool, TrHin, TrHout, CO2in, CO2out, NH3in, NH3out, Flow, Scale]
+        header_list = ['Tamb', 'rHamb', 'Tcool', 'rHcool', 'Tin', 'rHin', 'Tout', 'rHout', 'CO2in', 'CO2out', 'NH3in', 'NH3out', 'Flow', 'Scale']
 
-        TrHin_header = ['Tin', 'rHin']
-        TrHin_data_frame = pd.DataFrame(TrHin.data_table, columns=TrHin_header)
-
-        TrHout_header = ['Tout', 'rHout']
-        TrHout_data_frame = pd.DataFrame(TrHout.data_table, columns=TrHout_header)
-
-        CO2in_header = ['CO2in']
-        CO2in_data_frame = pd.DataFrame(CO2in.data_table, columns=CO2in_header)
-
-        CO2out_header = ['CO2out']
-        CO2out_data_frame = pd.DataFrame(CO2out.data_table, columns=CO2out_header)
-
-        NH3in_header = ['NH3in']
-        NH3in_data_frame = pd.DataFrame(NH3in.data_table, columns=NH3in_header)
-
-        NH3out_header = ['NH3out']
-        NH3out_data_frame = pd.DataFrame(NH3out.data_table, columns=NH3out_header)
-
-        flow_header = ['Flow']
-        flow_data_frame = pd.DataFrame(Flow.data_table, columns=flow_header)
+        for sensor, header in zip(sensor_list, header_list):
+            if sensor is not None:
+                data_frame = pd.DataFrame(sensor.data_table, columns=[header])
+                data_frames.append(data_frame)
+            else:
+                print(f"{sensor.name} not connected.")
 
         # Concatenate data frames
-        data_frame = pd.concat([clock_data_frame, TrHamb_data_frame, TrHcool_data_frame, TrHin_data_frame, TrHout_data_frame, CO2in_data_frame, CO2out_data_frame, NH3in_data_frame, NH3out_data_frame, flow_data_frame], axis=1)
+        data_frame = pd.concat(data_frames, axis=1)
 
-        if Scale is not None:
-            scale_header = ['Scale']
-            scale_data_frame = pd.DataFrame(Scale.data_table, columns=scale_header)
-            
-            data_frame = pd.concat([data_frame, scale_data_frame], axis=1)
-        else:
-            print(f"{Scale.name} not connected.")
-        
         # Call the csv
         file_name = self.name
-        self.csv_generator(file_name, data_frame)
+        self.generate_csv(file_name, data_frame)
 
-    def save_IRcamera(self, RTClock=None, IRcamera=None) -> None:
+    def save_IR_data(self, RTClock=None, IRcamera=None) -> None:
         if IRcamera is not None:
             clock_header = ['Time']
             clock_data_frame = pd.DataFrame(RTClock.data_table, columns=clock_header)
@@ -75,11 +55,11 @@ class Saver:
             # Concatenate data frames and call csv
             data_frame = pd.concat([clock_data_frame, IRcamera_data_frame], axis=1)
             file_name = self.name + "_IRcamera"
-            self.csv_generator(file_name, data_frame)
+            self.generate_csv(file_name, data_frame)
         else:
             print(f"{IRcamera.name} not connected.")
 
-    def save_Thermero(self, RTClock=None, Thermero=None) -> None:
+    def save_Thermero_data(self, RTClock=None, Thermero=None) -> None:
         if Thermero is not None:
             clock_header = ['Time']
             clock_data_frame = pd.DataFrame(RTClock.data_table, columns=clock_header)
@@ -90,7 +70,7 @@ class Saver:
             # Concatenate data frames and call csv
             data_frame = pd.concat([clock_data_frame, thermero_data_frame], axis=1)
             file_name = self.name + "_Thermero"
-            self.csv_generator(file_name, data_frame)
+            self.generate_csv(file_name, data_frame)
         else:
             print(f"{Thermero.name} not connected.")
 
