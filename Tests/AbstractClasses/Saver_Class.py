@@ -1,6 +1,7 @@
-import csv
-import time
+import numpy as np
 import datetime
+import time
+import csv
 
 from Sensor_Class import *
 
@@ -8,40 +9,38 @@ class Saver:
     def __init__(self, time_start_process=str) -> None:
         self.name = time_start_process + "_Measurements" # YYMMDD_HHMMSS_Measurements
 
+        print("Setup for saver successfully completed.")
+
     def csv_generator(self, file_name=str, header=list, data=list) -> None:
         # Create the csv file giving the file name, header, and list data
 
         print(f"CSV file '{file_name}' successfully created.")
 
     def save_sensors(self, RTClock=None, TrHin=None, TrHout=None, TrHamb=None, TrHcool=None, CO2in=None, CO2out=None, NH3in=None, NH3out=None, Flow=None, Scale=None) -> None:
-        
+        sensors_file_name = self.name
+        sensors_header = ['Time']
+        data = [RTClock.data_table]
+
         # Check if the sensor are connected
         if Scale is not None:
             print("connected")
 
-        # Merge data in a single list
-
-        # Update the header and keep only one time stamp
-
-        ###########TODO CHANGE ALL DATA_TABLE WITH TIME STAMP AS IN THE FIRST COLUMN
-
-
-    def save_IRcamera(self, IRcamera=None) -> None:
-        IR_file_name = self.name + "_IRcamera"
-        IR_header = ['Time']
-
+    def save_IRcamera(self, RTClock=None, IRcamera=None) -> None:
         if IRcamera is not None:
-            IR_data = IRcamera.data_table()
+            IR_file_name = self.name + "_IRcamera"
+            IR_header = ['Time']
+            IR_data = [RTClock.data_table, IRcamera.data_table]
+
             self.csv_generator(IR_file_name, IR_header, IR_data)
         else:
             print(f"{IRcamera.name} not attached.")
 
-    def save_Thermero(self, Thermero=None) -> None:
-        Thermero_file_name = self.name + "_Thermero"
-        Thermero_header = ['Time', 'A1', 'A2', 'A3', 'A4', 'A5', 'B1', 'B2', 'B3', 'B4', 'B5', 'C1', 'C2', 'C3', 'C4', 'C5', 'D1', 'D2', 'D3', 'D4', 'D5']
-
+    def save_Thermero(self, RTClock=None, Thermero=None) -> None:
         if Thermero is not None:
-            Thermero_data = Thermero.data_table()
+            Thermero_file_name = self.name + "_Thermero"
+            Thermero_header = ['Time', 'A1', 'A2', 'A3', 'A4', 'A5', 'B1', 'B2', 'B3', 'B4', 'B5', 'C1', 'C2', 'C3', 'C4', 'C5', 'D1', 'D2', 'D3', 'D4', 'D5']
+            Thermero_data = [RTClock.data_table, Thermero.data_table]
+
             self.csv_generator(Thermero_file_name, Thermero_header, Thermero_data)
         else:
             print(f"{Thermero.name} not attached.")

@@ -17,8 +17,8 @@ class Controller():
         self.Tref_in = Tref_in
         self.Tref_out = Tref_out
         self.rH_crit = rH_crit
-        self.w_in_crit = self.calculate_humidity_ratio(rH_crit, Tref_in) #0.0135
-        self.w_out_crit = self.calculate_humidity_ratio(rH_crit, Tref_out) #0.0180
+        self.w_in_crit = self.calculate_humidity_ratio(rH_crit, Tref_in)
+        self.w_out_crit = self.calculate_humidity_ratio(rH_crit, Tref_out)
 
         self.previous_dict = {
             'cooler_state': False,

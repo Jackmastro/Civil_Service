@@ -69,16 +69,14 @@ class CO2_SCD30(Sensor):
         print(f"Setup for {self.name} successfully completed.")
 
     def read_data(self):
-        data = [self.sensor.CO2, None, None]
-        # data = [self.sensor.CO2, self.sensor.temperature, self.sensor.relative_humidity] # Uncomment to obtain temperature and relative humidity
+        data = [self.sensor.CO2, self.sensor.temperature, self.sensor.relative_humidity]
         return np.round(data, 2)
     
     def read_data_point(self):
-        [CO2_value, _, _] = self.read_data()
-        return round(CO2_value, 2)
+        return np.round(self.sensor.CO2, 2)
     
     def save_data(self):
-        self.data_table.append(self.read_data())
+        self.data_table.append(self.read_data_point()) # Interested in CO2 values
     
     def save_data_point(self):
         self.data_point_table.append(self.read_data_point())
@@ -87,7 +85,7 @@ class TrH_AM2315C(Sensor):
     def __init__(self, name=str, tca=None) -> None:
         super().__init__(name)
         
-        self.unit = "° and %"
+        self.unit = "°C and %"
 
         # Set the temperature and relative humidity sensor through the multiplexer given its name
         self.sensor = adafruit_ahtx0.AHTx0(tca.set_channel(self.name))
@@ -99,8 +97,7 @@ class TrH_AM2315C(Sensor):
         return np.round(data, 2)
     
     def read_data_point(self):
-        [temperature_value, _] = self.read_data()
-        return np.round(temperature_value, 2)
+        return np.round(self.sensor.temperature, 2)
 
     def save_data(self):
         self.data_table.append(self.read_data())
@@ -112,7 +109,7 @@ class IR_MLX90640(Sensor):
     def __init__(self, name=str) -> None:
         super().__init__(name)
 
-        self.unit = "°"
+        self.unit = "°C"
 
         # Setup camera pixel size 
         self.shape = (24, 32)
@@ -136,7 +133,7 @@ class IR_MLX90640(Sensor):
     
     def read_data_point(self):
         temperature_mean = np.mean(self.read_data())
-        return round(temperature_mean, 2)
+        return np.round(temperature_mean, 2)
     
     def save_data(self):
         self.data_table.append(self.read_data()) # To convert data use: "np.reshape(data, self.shape)"
@@ -180,16 +177,14 @@ class Flow_SFM3119(Sensor):
             flow_value_Lmin = 0
         
         if type == "L/min":
-            data = [round(flow_value_Lmin, 2), None]
-            # data = [round(flow_value_Lmin, 2), round(temperature_value, 2)] # Uncomment to obtain temperature
+            data = [np.round(flow_value_Lmin, 2), np.round(temperature_value, 2)]
             return data
         
         elif type == "m/s":
             # Perform conversion from L/min to m/s
             area = (0.0166 / 2)**2 * np.pi # Taken from datasheet
             flow_value_ms = flow_value_Lmin / (area * 16670)
-            data = [round(flow_value_ms, 2), None]
-            # data = [round(flow_value_ms, 2), round(temperature_value, 2)] # Uncomment to obtain temperature
+            data = [np.round(flow_value_ms, 2), np.round(temperature_value, 2)]
             return data
         else:
             raise ValueError('type has to be "L/min" or "m/s". Received: {}'.format(type))
@@ -199,7 +194,7 @@ class Flow_SFM3119(Sensor):
         return flow_value
     
     def save_data(self):
-        self.data_table.append(self.read_data())
+        self.data_table.append(self.read_data_point()) # Interested in flow values
     
     def save_data_point(self):
         self.data_point_table.append(self.read_data_point())
@@ -270,7 +265,7 @@ class Scale_HX711(Sensor):
     
     def read_data_point(self):
         data_point = self.sensor.get_weight_mean(readings=20)
-        return round(data_point, 2)
+        return np.round(data_point, 2)
     
     def save_data(self):
         self.data_point_table.append(self.read_data())
@@ -307,7 +302,7 @@ class NH3_MQ137(Sensor):
     
     def read_data_point(self):
         data_point = self.NH3()
-        return round(data_point, 2)
+        return np.round(data_point, 2)
     
     def save_data(self):
         self.data_point_table.append(self.read_data())

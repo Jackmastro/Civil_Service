@@ -1,9 +1,6 @@
 # LCD HD44780 library https://pypi.org/project/RPLCD/ (Documentation: https://rplcd.readthedocs.io/en/latest/index.html)
 from RPLCD.i2c import CharLCD
 
-############ MIGLIORAMENTO: USARE ULTIMA ENTRATA DI DATA_TABLE AL POSTO CHE CHIAMARE IL READ_DATA
-# oppure prima salvare, poi controller, print
-
 class LCD_HD44780():
     def __init__(self, name=str) -> None:
         self.name = name
@@ -14,7 +11,9 @@ class LCD_HD44780():
         print(f"Setup for {self.name} successfully completed.")
 
     def print_first(self, TrHin=None, TrHout=None, TrHamb=None, CO2in=None, CO2out=None, NH3in=None, NH3out=None) -> None:
-        ############TODO ADD COOL AND MOVE CO2 AND NH3
+        ############TODO ADD COOL AND MOVE CO2 AND NH3 
+        ################# CORRECT NH3 VALUES
+        
         # Clean the screen
         self.lcd.clear()
         
@@ -109,7 +108,6 @@ class LCD_HD44780():
             self.lcd.write_string("-")
 
     def print_second(self, Flow=None, IRcamera=None, Thermero=None, Scale=None) -> None:
-        #########################TODO aggiungere % del duy cycle
         # Clean the screen
         self.lcd.clear()
         

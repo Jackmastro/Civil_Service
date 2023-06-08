@@ -12,7 +12,7 @@ from adafruit_mcp3xxx.analog_in import AnalogIn as analog_in
 class Chip(ABC):
     def __init__(self, name):
         self.name = name
-        self.chip = []
+        self.chip = None
 
     @abstractmethod
     def set_channel(self, sensor_name):
