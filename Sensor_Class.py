@@ -157,7 +157,7 @@ class RTC_DS1307(Sensor):
     
     def read_data_point(self):
         t = self.sensor.datetime
-        data_point = "{}_{}_{}_{}_{}_{}".format(t.tm_year, t.tm_mon, t.tm_mday, t.tm_hour, t.tm_min, t.tm_sec)
+        data_point = '{}_{}_{}_{}_{}_{}'.format(t.tm_year, t.tm_mon, t.tm_mday, t.tm_hour, t.tm_min, t.tm_sec)
         return data_point
     
     def save_data(self):

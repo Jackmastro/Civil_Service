@@ -61,7 +61,7 @@ class Saver:
             clock_header = ['Time']
             clock_data_frame = pd.DataFrame(RTClock.data_table, columns=clock_header)
 
-            IRcamera_header = ['' for _ in range(IRcamera.shape[0] * IRcamera.shape[1])]
+            IRcamera_header = ['{}'.format(i) for i in range(IRcamera.shape[0] * IRcamera.shape[1])]
             IRcamera_data_frame = pd.DataFrame(IRcamera.data_table, columns=IRcamera_header)
 
             # Concatenate data frames and call csv
