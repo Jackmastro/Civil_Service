@@ -26,7 +26,8 @@ while True:
         mlx.getFrame(frame) # read MLX temperatures into frame var
         data_array = (np.reshape(frame,mlx_shape)) # reshape to 24x32
         therm1.set_data(np.fliplr(data_array)) # flip left to right
-        therm1.set_clim(vmin=np.min(data_array),vmax=np.max(data_array)) # set bounds
+#         therm1.set_clim(vmin=np.min(data_array),vmax=np.max(data_array)) # set bounds
+        therm1.set_clim(vmin=20,vmax=35) # set bounds
         cbar.update_normal(therm1) # update colorbar range
         plt.title(f"Max Temp: {np.max(data_array):.1f}C")
         plt.pause(0.001) # required
