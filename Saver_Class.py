@@ -69,13 +69,13 @@ class Saver:
             file_name = self.name + "_IRcamera"
             self.generate_csv(data_frame, file_name)
 
-    def save_Thermero_data(self, RTClock, thermero) -> None:
-        if thermero is not None:
+    def save_Thermero_data(self, RTClock, Thermero) -> None:
+        if Thermero is not None:
             clock_header = ['Time']
             clock_data_frame = pd.DataFrame(RTClock.data_table, columns=clock_header)
             
-            thermero_header = ['A1', 'A2', 'A3', 'A4', 'A5', 'B1', 'B2', 'B3', 'B4', 'B5', 'C1', 'C2', 'C3', 'C4', 'C5', 'D1', 'D2', 'D3', 'D4', 'D5']
-            thermero_data_frame = pd.DataFrame(thermero.data_table, columns=thermero_header + '[{}]'.format(thermero.unit))
+            thermero_header = ['{}{} [{}]'.format(row, col, Thermero.unit) for row in 'ABCD' for col in range(1, 6)]
+            thermero_data_frame = pd.DataFrame(Thermero.data_table, columns=thermero_header + '[{}]'.format(Thermero.unit))
 
             # Concatenate data frames and call csv
             data_frame = pd.concat([clock_data_frame, thermero_data_frame], axis=1)
