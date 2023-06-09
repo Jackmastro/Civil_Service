@@ -153,7 +153,7 @@ class RTC_DS1307(Sensor):
         print(f"Setup for {self.name} successfully completed.")
         
     def read_data(self):
-        self.read_data_point()
+        return self.read_data_point()
     
     def read_data_point(self):
         t = self.sensor.datetime
@@ -444,6 +444,18 @@ class Thermero_DS18B20(Sensor):
 #     
 # except KeyboardInterrupt:
 #     print("You have successfully terminated the programm.")
+
+RTClock = RTC_DS1307("RTClock")
+try:
+    while True:
+        data = RTClock.read_data()
+        print(data)
+        print(type(data))
+        print("-----------------------------")
+        time.sleep(3)
+    
+except KeyboardInterrupt:
+    print("You have successfully terminated the programm.")
 
 ##################################################################
 # TCA = Multiplexer_TCA9548A("TCA")

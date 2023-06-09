@@ -1,1 +1,2 @@
-Time,Tamb,rHamb,Tcool,rHcool,Tin,rHin,Tout,rHout,CO2in
+Time,Tamb,rHamb,Tcool,rHcool,Tin,rHin,Tout,rHout,CO2in,CO2out,NH3in,NH3out,Flow,Scale
+,25.08,43.97,25.03,46.37,24.76,46.77,24.64,43.08,573.6,357.68,,0.0,0,6912.1
