@@ -361,7 +361,7 @@ class Thermero_DS18B20(Sensor):
     def save_data(self):
         # Populate order_data_vec using advanced indexing
         order_data_vec = np.zeros((1, 20))  # 20 sensors in total
-        order_data_vec[[value - 1 for value in self.physical_order_dict.values()]] = self.read_data() # Python indexing: value reduced by 1
+        order_data_vec[0, [value - 1 for value in self.physical_order_dict.values()]] = self.read_data() # Python indexing: value reduced by 1
         self.data_table.append(order_data_vec)
 
     def save_data_point(self):
