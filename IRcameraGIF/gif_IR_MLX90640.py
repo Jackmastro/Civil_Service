@@ -1,9 +1,9 @@
 # matplotlib for Raspberry Pi https://linuxhint.com/install-matplotlib-raspberry-pi/
-
-import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import matplotlib.animation as animation
+# For data restructuring https://pypi.org/project/pandas/
+import pandas as pd
 
 # Load data
 data = pd.read_csv('temperature_data.csv')

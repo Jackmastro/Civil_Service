@@ -16,13 +16,13 @@ import adafruit_scd30
 import adafruit_ahtx0
 # IR MLX90640 library https://github.com/adafruit/Adafruit_CircuitPython_MLX90640
 import adafruit_mlx90640
+# RTC Real Time Cloack DS1307 library https://docs.circuitpython.org/projects/ds1307/en/latest/index.html
+import adafruit_ds1307
 # Flow SFM3119 library https://github.com/Sensirion/python-i2c-sfm-sf06/blob/master/sensirion_i2c_sfm_sf06
 import argparse
 from sensirion_i2c_driver import LinuxI2cTransceiver, I2cConnection, CrcCalculator
 from sensirion_driver_adapters.i2c_adapter.i2c_channel import I2cChannel
 from sensirion_i2c_sfm_sf06.device import SfmSf06Device
-# RTC Real Time Cloack DS1307 library https://docs.circuitpython.org/projects/ds1307/en/latest/index.html
-import adafruit_ds1307
 # Thermero DS18B20 https://pypi.org/project/w1thermsensor/
 from w1thermsensor import W1ThermSensor
 from w1thermsensor import Sensor as SensorType
@@ -113,11 +113,9 @@ class IR_MLX90640(Sensor):
 
         # Setup camera pixel size 
         self.shape = (24, 32)
-        
-        # Create I2C bus as normal
-        i2c = board.I2C()
 
         # Set the IR camera with the i2c channel
+        i2c = board.I2C()
         self.sensor = adafruit_mlx90640.MLX90640(i2c)
 
         # Setup refresh rate. The camera captures data at a rates defined in RefreshRate class (available: 0_5,1,2,4,8,16,32,64).
@@ -138,6 +136,30 @@ class IR_MLX90640(Sensor):
     
     def save_data(self):
         self.data_table.append(self.read_data()) # To convert data use: "np.reshape(data, self.shape)"
+    
+    def save_data_point(self):
+        self.data_point_table.append(self.read_data_point())
+
+class RTC_DS1307(Sensor): ###############################TODO
+    def __init__(self, name=str) -> None:
+        super().__init__(name)
+
+        self.unit = "time"
+
+        # Set the RTC Real Time Clock with the i2c channel
+        i2c = board.I2C()
+        self.sensor = adafruit_ds1307.DS1307(i2c)
+        
+        print(f"Setup for {self.name} successfully completed.")
+        
+    def read_data(self):
+        self.read_data_point()
+    
+    def read_data_point(self):
+        return self.sensor.datetime
+    
+    def save_data(self):
+        self.data_table.append(self.read_data())
     
     def save_data_point(self):
         self.data_point_table.append(self.read_data_point())
@@ -198,32 +220,6 @@ class Flow_SFM3119(Sensor):
     
     def save_data(self):
         self.data_table.append(self.read_data_point()) # Interested in flow values
-    
-    def save_data_point(self):
-        self.data_point_table.append(self.read_data_point())
-
-class RTC_DS1307(Sensor): ###############################TODO
-    def __init__(self, name=str) -> None:
-        super().__init__(name)
-
-        self.unit = "time"
-
-        # Create I2C bus as normal
-        i2c = board.I2C()
-
-        # Set the RTC Real Time Clock with the i2c channel
-        self.sensor = adafruit_ds1307.DS1307(i2c)
-        
-        print(f"Setup for {self.name} successfully completed.")
-        
-    def read_data(self):
-        self.read_data_point()
-    
-    def read_data_point(self):
-        return self.sensor.datetime
-    
-    def save_data(self):
-        self.data_table.append(self.read_data())
     
     def save_data_point(self):
         self.data_point_table.append(self.read_data_point())
@@ -347,7 +343,7 @@ class Thermero_DS18B20(Sensor):
             "00000e9b86f4": 10   # D5 "00000e72e2b9"
         }
 
-        # Set all the 1-wire temperature sensors
+        # Set all the 1-wire temperature sensors of the type of interest
         self.sensor = W1ThermSensor.get_available_sensors([SensorType.DS18B20])
 
         print(f"Setup for {self.name} successfully completed.")

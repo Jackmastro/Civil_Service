@@ -1,6 +1,5 @@
 # For data restructuring https://pypi.org/project/pandas/
 import pandas as pd
-import time
 import os
 
 from Sensor_Class import *
@@ -14,7 +13,7 @@ class Saver:
     def generate_csv(self, file_name=str, data_frame=None) -> None:
         # Create the csv file giving the file name, header, and list data
 
-        folder_path = '../Data'
+        folder_path = 'Data'
         os.makedirs(folder_path, exist_ok=True)
         file_path = os.path.join(folder_path, file_name + ".csv")
 
@@ -74,8 +73,3 @@ class Saver:
             self.generate_csv(file_name, data_frame)
         else:
             print(f"{Thermero.name} not connected.")
-
-################################
-            
-# time_experiment = 
-# saver = Saver(time_experiment)

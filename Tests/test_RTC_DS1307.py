@@ -23,7 +23,7 @@ if False:  # change to True if you want to set the time!
 # Main loop:
 while True:
     t = rtc.datetime
-    print("{}_{}_{}_{}_{}_{:01}".format(t.tm_year, t.tm_mon, t.tm_mday, t.tm_hour, t.tm_min, t.tm_sec))
+    print("{}_{}_{}_{}_{}_{}".format(t.tm_year, t.tm_mon, t.tm_mday, t.tm_hour, t.tm_min, t.tm_sec))
     print(time.time())
 #     print(t)     # uncomment for debugging
 #     print(

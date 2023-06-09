@@ -241,19 +241,19 @@ try:
             time_last_save_controller = time.time()
             
         if time.time() - time_last_save_saving >= saving_rate:
-            [sensor["sensor"].save_data() for sensor in overview_sensor_dict if sensor["is_connected"]]
+            [sensor["sensor"].save_data() for sensor in overview_sensor_dict.values() if sensor["is_connected"]]
 
             time_last_save_saving = time.time()
 
 except KeyboardInterrupt:
+    print("--- PROCESS TERMINATED ---")
+
+finally:
     # Call the savers for last point
     saver.save_sensors()
     saver.save_IRcamera()
     saver.save_Thermero()
     print("Last data saved.")
-    print("--- PROCESS TERMINATED ---")
-
-finally:
     print("--- CLEANUP STARTED ---")
     ventilation_fan.cleanup()
     suction_fan.cleanup()
@@ -263,11 +263,4 @@ finally:
     lcd.cleanup()
     # NOT GPIO.cleanup(), the heater and cooler will turn on!
     print("--- CLEANUP COMPLETED ---")
-    print("--- PROGRAM TERMINATED ---")
-    
-#     Traceback (most recent call last):
-#   File "/home/pi/Civil_Service/Tests/AbstractClasses/Main.py", line 244, in <module>
-#     [sensor["sensor"].save_data() for sensor in overview_sensor_dict if sensor["is_connected"]]
-#   File "/home/pi/Civil_Service/Tests/AbstractClasses/Main.py", line 244, in <listcomp>
-#     [sensor["sensor"].save_data() for sensor in overview_sensor_dict if sensor["is_connected"]]
-# TypeError: string indices must be integers
+    print("--- PROGRAM TERMINATED AT {} ---".format(RTClock.read_data_point()))
