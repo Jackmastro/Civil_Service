@@ -6,10 +6,10 @@ import matplotlib.animation as animation
 import pandas as pd
 
 # Load data
-data = pd.read_csv('Data/temperature_data.csv')
+data = pd.read_csv('2023_6_9_14_18_20_Measurements_IRcamera.csv')
 
 # Convert column to data format
-data['timestamp'] = pd.to_datetime(data['timestamp'])
+data['Time'] = pd.to_datetime(data['Time'], format='%Y_%m_%d_%H_%M_%S')
 
 # Set up figure
 fig, ax = plt.subplots()
@@ -20,7 +20,8 @@ def update_frame(frame):
     
     # Plot the temperature data for the current frame
     current_data = data.iloc[frame]
-    temperatures = current_data.drop('timestamp')
+    temperatures = current_data.drop('Time')
+    temperatures = temperatures.astype(float)  # Convert to float
     img = ax.imshow(temperatures.values.reshape((24, 32)), cmap='hot', aspect='auto')
     
     # Add a colorbar
@@ -31,7 +32,7 @@ def update_frame(frame):
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d %H:%M:%S'))
     
     # Rotate and align the x-axis labels
-    plt.setp(ax.get_xticklabels(), rotation=45, ha='right')
+    # plt.setp(ax.get_xticklabels(), rotation=45, ha='right')
     
     # Set labels and title
     ax.set_xlabel('Time')
@@ -44,7 +45,7 @@ def update_frame(frame):
     plt.gcf().autofmt_xdate()
 
 # Create animation
-ani = animation.FuncAnimation(fig, update_frame, frames=len(data), interval=200)
+ani = animation.FuncAnimation(fig, update_frame, frames=len(data)-1, interval=200)
 
 # Save animation as gif
 ani.save('temperature_animation.gif', writer='pillow')
