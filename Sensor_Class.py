@@ -37,7 +37,6 @@ class Sensor(ABC):
         self.name = name
         self.unit = str
         self.data_table = []
-        self.data_point_table = []
         self.sensor = None
 
     @abstractmethod
@@ -57,6 +56,32 @@ class Sensor(ABC):
         pass
 
 # I2C
+class RTC_DS1307(Sensor):
+    def __init__(self, name=str) -> None:
+        super().__init__(name)
+
+        self.unit = "time"
+
+        # Set the RTC Real Time Clock with the i2c channel
+        i2c = board.I2C()
+        self.sensor = adafruit_ds1307.DS1307(i2c)
+        
+        print(f"Setup for {self.name} successfully completed.")
+        
+    def read_data(self):
+        return self.read_data_point()
+    
+    def read_data_point(self):
+        t = self.sensor.datetime
+        data_point = '{}_{}_{}_{}_{}_{}'.format(t.tm_year, t.tm_mon, t.tm_mday, t.tm_hour, t.tm_min, t.tm_sec)
+        return data_point
+    
+    def save_data(self):
+        self.data_table.append(self.read_data())
+    
+    def save_data_point(self):
+        self.data_table.append(self.read_data_point())
+        
 class CO2_SCD30(Sensor):
     def __init__(self, name=str, tca=None) -> None:
         super().__init__(name)
@@ -79,7 +104,7 @@ class CO2_SCD30(Sensor):
         self.data_table.append(self.read_data_point()) # Interested in CO2 values
     
     def save_data_point(self):
-        self.data_point_table.append(self.read_data_point())
+        self.data_table.append(self.read_data_point())
 
 class TrH_AM2315C(Sensor):
     def __init__(self, name=str, tca=None) -> None:
@@ -103,7 +128,7 @@ class TrH_AM2315C(Sensor):
         self.data_table.append(self.read_data())
 
     def save_data_point(self):
-        self.data_point_table.append(self.read_data_point())
+        self.data_table.append(self.read_data_point())
 
 class IR_MLX90640(Sensor):
     def __init__(self, name=str) -> None:
@@ -138,33 +163,7 @@ class IR_MLX90640(Sensor):
         self.data_table.append(self.read_data()) # To convert data use: "np.reshape(data, self.shape)"
     
     def save_data_point(self):
-        self.data_point_table.append(self.read_data_point())
-
-class RTC_DS1307(Sensor):
-    def __init__(self, name=str) -> None:
-        super().__init__(name)
-
-        self.unit = "time"
-
-        # Set the RTC Real Time Clock with the i2c channel
-        i2c = board.I2C()
-        self.sensor = adafruit_ds1307.DS1307(i2c)
-        
-        print(f"Setup for {self.name} successfully completed.")
-        
-    def read_data(self):
-        self.read_data_point()
-    
-    def read_data_point(self):
-        t = self.sensor.datetime
-        data_point = '{}_{}_{}_{}_{}_{}'.format(t.tm_year, t.tm_mon, t.tm_mday, t.tm_hour, t.tm_min, t.tm_sec)
-        return data_point
-    
-    def save_data(self):
-        self.data_table.append(self.read_data())
-    
-    def save_data_point(self):
-        self.data_point_table.append(self.read_data_point())
+        self.data_table.append(self.read_data_point())
 
 class Flow_SFM3119(Sensor):
     def __init__(self, name=str) -> None:
@@ -224,7 +223,7 @@ class Flow_SFM3119(Sensor):
         self.data_table.append(self.read_data_point()) # Interested in flow values
     
     def save_data_point(self):
-        self.data_point_table.append(self.read_data_point())
+        self.data_table.append(self.read_data_point())
 
 # SPI
 class Scale_HX711(Sensor):
@@ -272,7 +271,7 @@ class Scale_HX711(Sensor):
         self.data_table.append(self.read_data_point()) # Interested in g values
     
     def save_data_point(self):
-        self.data_point_table.append(self.read_data_point())
+        self.data_table.append(self.read_data_point())
 
 class NH3_MQ137(Sensor):
     def __init__(self, name=str, mcp=None) -> None:
@@ -309,7 +308,7 @@ class NH3_MQ137(Sensor):
         self.data_table.append(self.read_data())
     
     def save_data_point(self):
-        self.data_point_table.append(self.read_data_point())
+        self.data_table.append(self.read_data_point())
 
 # 1-Wire
 class Thermero_DS18B20(Sensor):
@@ -366,7 +365,7 @@ class Thermero_DS18B20(Sensor):
         self.data_table.append(order_data_vec)
 
     def save_data_point(self):
-        self.data_point_table.append(self.read_data_point())
+        self.data_table.append(self.read_data_point())
 
 #####################################################################################
 # tca = Multiplexer_TCA9548A("TCA")
@@ -439,6 +438,30 @@ class Thermero_DS18B20(Sensor):
 #         print(dataOut)
 #         dataIn = NH3in.read_data_point()
 #         print(dataIn)
+#         print("-----------------------------")
+#         time.sleep(3)
+#     
+# except KeyboardInterrupt:
+#     print("You have successfully terminated the programm.")
+
+Thermero = Thermero_DS18B20("Thermero")
+try:
+    while True:
+        Thermero.save_data()
+        print(Thermero.data_table)
+        print("-----------------------------")
+        time.sleep(3)
+        
+except KeyboardInterrupt:
+    print("You have successfully terminated the programm.")
+
+# RTClock = RTC_DS1307("RTClock")
+# try:
+#     while True:
+#         data = RTClock.read_data()
+#         print(data)
+#         RTClock.save_data_point()
+#         print(RTClock.data_table)
 #         print("-----------------------------")
 #         time.sleep(3)
 #     
