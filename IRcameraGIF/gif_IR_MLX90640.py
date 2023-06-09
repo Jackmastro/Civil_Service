@@ -6,7 +6,7 @@ import matplotlib.animation as animation
 import pandas as pd
 
 # Load data
-data = pd.read_csv('temperature_data.csv')
+data = pd.read_csv('Data/temperature_data.csv')
 
 # Convert column to data format
 data['timestamp'] = pd.to_datetime(data['timestamp'])
