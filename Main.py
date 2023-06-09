@@ -195,8 +195,7 @@ while not process_is_started:
 
 ######################## TODO CALL THE RTC
 print("Saver:")
-t = RTClock.read_data_point()
-time_start_process_str = "{}_{}_{}_{}_{}_{}".format(t.tm_year, t.tm_mon, t.tm_mday, t.tm_hour, t.tm_min, t.tm_sec)
+time_start_process_str = RTClock.read_data_point()
 print(time_start_process_str)
 saver = Saver(time_start_process_str)
 
@@ -232,26 +231,24 @@ try:
                 is_first_turn = not is_first_turn
                 
             time_last_save_LCD = time.time()
+            print("lcd")
 
         if time.time() - time_last_save_controller >= control_rate:
             controller.control(TrHamb, TrHin, TrHout, cooler, heater)
                 
             time_last_save_controller = time.time()
+            print("cont")
             
         if time.time() - time_last_save_saving >= saving_rate:
-            [sensor["sensor"].save_data() for sensor in overview_sensor_dict.values() if sensor["is_connected"] and sensor["sensor"] is not None]
+            saver.append_data(overview_sensor_dict)
 
             time_last_save_saving = time.time()
+            print("sav")
 
 except KeyboardInterrupt:
     print("--- PROCESS TERMINATED ---")
 
 finally:
-    # Call the savers for last point
-    saver.save_sensor_data(RTClock, TrHamb, TrHcool, TrHin, TrHout, CO2in, CO2out, NH3in, NH3out, Flow, Scale)
-    saver.save_IR_data(RTClock, IRcamera)
-    saver.save_Thermero_data(RTClock, Thermero)
-    print("Last data saved.")
     print("--- CLEANUP STARTED ---")
     ventilation_fan.cleanup()
     suction_fan.cleanup()
@@ -261,4 +258,11 @@ finally:
     lcd.cleanup()
     # NOT GPIO.cleanup(), the heater and cooler will turn on!
     print("--- CLEANUP COMPLETED ---")
-    print("--- PROGRAM TERMINATED AT {} ---".format(RTClock.read_data_point()))
+    print("--- CSV GENERATION STARTED ---")
+    saver.append_data(overview_sensor_dict)
+    print("Last data saved.")
+    saver.save_sensor_data(RTClock, TrHamb, TrHcool, TrHin, TrHout, CO2in, CO2out, NH3in, NH3out, Flow, Scale)
+    saver.save_IR_data(RTClock, IRcamera)
+    saver.save_Thermero_data(RTClock, Thermero)
+    print("--- CSV GENERATION COMPLETED ---")
+    print("--- PROGRAM TERMINATED ON {} ---".format(RTClock.read_data_point()))

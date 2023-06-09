@@ -84,6 +84,7 @@ class Controller():
                     return {'cooler_state': True, 'heater_state': True, 'heater_Tref': self.Tref_out}
 
     def control(self, TrHamb, TrHin, TrHout, cooler, heater) -> None:
+        print("inside control")
         # Read data from sensors
         self.read_data_from_sensors(TrHamb, TrHin, TrHout)
 

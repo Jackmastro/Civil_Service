@@ -9,6 +9,9 @@ class Saver:
         self.name = time_start_process + "_Measurements" # YYMMDD_HHMMSS_Measurements
 
         print("Setup for saver successfully completed.")
+        
+    def append_data(self, overview_sensor_dict) -> None:
+        [sensor["sensor"].save_data() for sensor in overview_sensor_dict.values() if sensor["is_connected"] and sensor["sensor"] is not None]
 
     def generate_csv(self, file_name=str, data_frame=None) -> None:
         # Create the csv file giving the file name, header, and list data
@@ -34,8 +37,6 @@ class Saver:
             if sensor is not None:
                 data_frame = pd.DataFrame(sensor.data_table, columns=[header])
                 data_frames.append(data_frame)
-            else:
-                print(f"{sensor.name} not connected.")
 
         # Concatenate data frames
         data_frame = pd.concat(data_frames, axis=1)
@@ -56,8 +57,6 @@ class Saver:
             data_frame = pd.concat([clock_data_frame, IRcamera_data_frame], axis=1)
             file_name = self.name + "_IRcamera"
             self.generate_csv(file_name, data_frame)
-        else:
-            print(f"{IRcamera.name} not connected.")
 
     def save_Thermero_data(self, RTClock=None, Thermero=None) -> None:
         if Thermero is not None:
@@ -71,5 +70,4 @@ class Saver:
             data_frame = pd.concat([clock_data_frame, thermero_data_frame], axis=1)
             file_name = self.name + "_Thermero"
             self.generate_csv(file_name, data_frame)
-        else:
-            print(f"{Thermero.name} not connected.")
+            
