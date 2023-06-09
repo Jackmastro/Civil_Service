@@ -1,3 +1,4 @@
+# https://gist.github.com/justinmklam/090d92011c6b7c9510f86b4cb667be92
 import time,board,busio
 import numpy as np
 import adafruit_mlx90640
