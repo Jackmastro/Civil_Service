@@ -275,3 +275,10 @@ finally:
     saver.save_Thermero_data(RTClock, Thermero)
     print("--- CSV GENERATION COMPLETED ---")
     print("--- PROGRAM TERMINATED ON {} ---".format(RTClock.read_data_point()))
+    
+# Traceback (most recent call last):
+#   File "/home/pi/Civil_Service/Main.py", line 275, in <module>
+#     saver.save_Thermero_data(RTClock, Thermero)
+#   File "/home/pi/Civil_Service/Saver_Class.py", line 78, in save_Thermero_data
+#     thermero_data_frame = pd.DataFrame(Thermero.data_table, columns=thermero_header + '[{}]'.format(Thermero.unit))
+# TypeError: can only concatenate list (not "str") to list
