@@ -316,7 +316,7 @@ class Thermero_DS18B20(Sensor):
     def __init__(self, name=str) -> None:
         super().__init__(name)
 
-        self.unit = "°"
+        self.unit = "°C"
 
         gpio_Thermero_BCM = 4 #7
         GPIO.setup(gpio_Thermero_BCM, GPIO.IN)
