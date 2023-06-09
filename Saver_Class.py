@@ -38,7 +38,7 @@ class Saver:
                                         (TrHin, 'Tin', 'rHin'), (TrHout, 'Tout', 'rHout')]
         for sensor, temp_header, rh_header in temperature_humidity_sensors:
             if sensor is not None:
-                data_frame = pd.DataFrame(sensor.data_table, columns=[temp_header, rh_header])
+                data_frame = pd.DataFrame(sensor.data_table, columns=[temp_header, rh_header + '[{}]'.format(sensor.unit)])
                 data_frames.append(data_frame)
         
         # Append the other data_tables
@@ -61,21 +61,21 @@ class Saver:
             clock_header = ['Time']
             clock_data_frame = pd.DataFrame(RTClock.data_table, columns=clock_header)
 
-            IRcamera_header = ['{}'.format(i) for i in range(IRcamera.shape[0] * IRcamera.shape[1])]
-            IRcamera_data_frame = pd.DataFrame(IRcamera.data_table, columns=IRcamera_header)
+            IRcamera_header = ['{}'.format(i+1) for i in range(IRcamera.shape[0] * IRcamera.shape[1])]
+            IRcamera_data_frame = pd.DataFrame(IRcamera.data_table, columns=IRcamera_header + '[{}]'.format(IRcamera.unit))
 
             # Concatenate data frames and call csv
             data_frame = pd.concat([clock_data_frame, IRcamera_data_frame], axis=1)
             file_name = self.name + "_IRcamera"
             self.generate_csv(data_frame, file_name)
 
-    def save_Thermero_data(self, RTClock, Thermero) -> None:
-        if Thermero is not None:
+    def save_Thermero_data(self, RTClock, thermero) -> None:
+        if thermero is not None:
             clock_header = ['Time']
             clock_data_frame = pd.DataFrame(RTClock.data_table, columns=clock_header)
             
             thermero_header = ['A1', 'A2', 'A3', 'A4', 'A5', 'B1', 'B2', 'B3', 'B4', 'B5', 'C1', 'C2', 'C3', 'C4', 'C5', 'D1', 'D2', 'D3', 'D4', 'D5']
-            thermero_data_frame = pd.DataFrame(Thermero.data_table, columns=thermero_header)
+            thermero_data_frame = pd.DataFrame(thermero.data_table, columns=thermero_header + '[{}]'.format(thermero.unit))
 
             # Concatenate data frames and call csv
             data_frame = pd.concat([clock_data_frame, thermero_data_frame], axis=1)
