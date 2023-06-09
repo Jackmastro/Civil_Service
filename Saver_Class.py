@@ -11,29 +11,40 @@ class Saver:
         print("Setup for saver successfully completed.")
         
     def append_data(self, overview_sensor_dict) -> None:
-        [sensor["sensor"].save_data() for sensor in overview_sensor_dict.values() if sensor["is_connected"] and sensor["sensor"] is not None]
+        # [sensor["sensor"].save_data() for sensor in overview_sensor_dict.values() if sensor["is_connected"] and sensor["sensor"] is not None]
+        for sensor in overview_sensor_dict.values():
+            if sensor["is_connected"] and sensor["sensor"] is not None:
+                sensor["sensor"].save_data()
 
-    def generate_csv(self, file_name=str, data_frame=None) -> None:
-        # Create the csv file giving the file name, header, and list data
-
+    def generate_csv(self, data_frame, file_name=str) -> None:
+        # Check for the folder path
         folder_path = 'Data'
         os.makedirs(folder_path, exist_ok=True)
         file_path = os.path.join(folder_path, file_name + ".csv")
 
+        # Save the .csv file
         data_frame.to_csv(file_path, index=False)
 
         print(f"CSV file '{file_name}' successfully created.")
 
-    def save_sensor_data(self, RTClock=None, TrHamb=None, TrHcool=None, TrHin=None, TrHout=None, CO2in=None, CO2out=None, NH3in=None, NH3out=None, Flow=None, Scale=None) -> None:
+    def save_sensor_data(self, RTClock, TrHamb, TrHcool, TrHin, TrHout, CO2in, CO2out, NH3in, NH3out, Flow, Scale) -> None:
         clock_header = ['Time']
         clock_data_frame = pd.DataFrame(RTClock.data_table, columns=clock_header)
 
         data_frames = [clock_data_frame]
 
-        sensor_list = [TrHamb, TrHcool, TrHin, TrHout, CO2in, CO2out, NH3in, NH3out, Flow, Scale]
-        header_list = ['Tamb', 'rHamb', 'Tcool', 'rHcool', 'Tin', 'rHin', 'Tout', 'rHout', 'CO2in', 'CO2out', 'NH3in', 'NH3out', 'Flow', 'Scale']
-
-        for sensor, header in zip(sensor_list, header_list):
+        # Append the temperature and relative humidity data_tables
+        temperature_humidity_sensors = [(TrHamb, 'Tamb', 'rHamb'), (TrHcool, 'Tcool', 'rHcool'),
+                                        (TrHin, 'Tin', 'rHin'), (TrHout, 'Tout', 'rHout')]
+        for sensor, temp_header, rh_header in temperature_humidity_sensors:
+            if sensor is not None:
+                data_frame = pd.DataFrame(sensor.data_table, columns=[temp_header, rh_header])
+                data_frames.append(data_frame)
+        
+        # Append the other data_tables
+        other_sensors = [(CO2in, 'CO2in'), (CO2out, 'CO2out'), (NH3in, 'NH3in'),
+                         (NH3out, 'NH3out'), (Flow, 'Flow'), (Scale, 'Scale')]
+        for sensor, header in other_sensors:
             if sensor is not None:
                 data_frame = pd.DataFrame(sensor.data_table, columns=[header])
                 data_frames.append(data_frame)
@@ -43,9 +54,9 @@ class Saver:
 
         # Call the csv
         file_name = self.name
-        self.generate_csv(file_name, data_frame)
+        self.generate_csv(data_frame, file_name)
 
-    def save_IR_data(self, RTClock=None, IRcamera=None) -> None:
+    def save_IR_data(self, RTClock, IRcamera) -> None:
         if IRcamera is not None:
             clock_header = ['Time']
             clock_data_frame = pd.DataFrame(RTClock.data_table, columns=clock_header)
@@ -56,9 +67,9 @@ class Saver:
             # Concatenate data frames and call csv
             data_frame = pd.concat([clock_data_frame, IRcamera_data_frame], axis=1)
             file_name = self.name + "_IRcamera"
-            self.generate_csv(file_name, data_frame)
+            self.generate_csv(data_frame, file_name)
 
-    def save_Thermero_data(self, RTClock=None, Thermero=None) -> None:
+    def save_Thermero_data(self, RTClock, Thermero) -> None:
         if Thermero is not None:
             clock_header = ['Time']
             clock_data_frame = pd.DataFrame(RTClock.data_table, columns=clock_header)
@@ -69,5 +80,5 @@ class Saver:
             # Concatenate data frames and call csv
             data_frame = pd.concat([clock_data_frame, thermero_data_frame], axis=1)
             file_name = self.name + "_Thermero"
-            self.generate_csv(file_name, data_frame)
+            self.generate_csv(data_frame, file_name)
             

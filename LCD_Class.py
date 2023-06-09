@@ -11,9 +11,6 @@ class LCD_HD44780():
         print(f"Setup for {self.name} successfully completed.")
 
     def print_first(self, TrHin=None, TrHout=None, TrHamb=None, CO2in=None, CO2out=None, NH3in=None, NH3out=None) -> None:
-        ############TODO ADD COOL AND MOVE CO2 AND NH3 
-        ################# CORRECT NH3 VALUES
-        
         # Clean the screen
         self.lcd.clear()
         
