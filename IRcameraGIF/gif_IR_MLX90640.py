@@ -1,51 +1,47 @@
-# matplotlib for Raspberry Pi https://linuxhint.com/install-matplotlib-raspberry-pi/
+import os
+import tkinter as tk
+from tkinter import filedialog
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import matplotlib.animation as animation
-# For data restructuring https://pypi.org/project/pandas/
 import pandas as pd
+import numpy as np
 
-# Load data
-data = pd.read_csv('2023_6_9_14_18_20_Measurements_IRcamera.csv')
+# Create a Tkinter root window
+root = tk.Tk()
+root.withdraw()
 
-# Convert column to data format
-data['Time'] = pd.to_datetime(data['Time'], format='%Y_%m_%d_%H_%M_%S')
+# Ask the user to select a file
+file_path = filedialog.askopenfilename()  # Prompt the user to select a file
 
-# Set up figure
-fig, ax = plt.subplots()
+# Load data from the selected file
+data = pd.read_csv(file_path)  # Read the selected file
 
-# Update function for frames
+# Convert column to datetime format
+data['Time'] = pd.to_datetime(data['Time'], format='%Y_%m_%d_%H_%M_%S')  # Convert 'Time' column to datetime format
+
+# Setup the figure for plotting
+fig, ax = plt.subplots(figsize=(12, 7))
+therm1 = ax.imshow(np.zeros((24, 32)), vmin=0, vmax=60)  # Create initial plot with zeros
+therm1.set_clim(vmin=20, vmax=30)  # Set colorbar limits
+cbar = fig.colorbar(therm1)
+cbar.set_label('Temperature [$^{\circ}$C]', fontsize=14)
+ax.set_xticklabels([])  # Remove x-axis tick labels
+ax.set_yticklabels([])  # Remove y-axis tick labels
+
 def update_frame(frame):
-    ax.clear()
-    
-    # Plot the temperature data for the current frame
-    current_data = data.iloc[frame]
-    temperatures = current_data.drop('Time')
-    temperatures = temperatures.astype(float)  # Convert to float
-    img = ax.imshow(temperatures.values.reshape((24, 32)), cmap='hot', aspect='auto')
-    
-    # Add a colorbar
-    cbar = fig.colorbar(img, ax=ax, fraction=0.046, pad=0.04)
-    
-    # Format the timestamp on the x-axis
-    ax.xaxis.set_major_locator(mdates.AutoDateLocator())
-    ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d %H:%M:%S'))
-    
-    # Rotate and align the x-axis labels
-    # plt.setp(ax.get_xticklabels(), rotation=45, ha='right')
-    
-    # Set labels and title
-    ax.set_xlabel('Time')
-    ax.set_ylabel('Pixel')
-    ax.set_title('MLX90640 Temperature Data')
-    
-    # Set the timestamp at the bottom
-    plt.subplots_adjust(bottom=0.2)
-    fig.tight_layout()
-    plt.gcf().autofmt_xdate()
+    current_data = data.iloc[frame]  # Get the data for the current frame
+    temperatures = current_data.drop('Time')  # Exclude the 'Time' column
+    temperatures = temperatures.astype(float)
+    temperatures = temperatures.values.reshape((24, 32))
+    therm1.set_data(np.fliplr(temperatures))  # Update the plot with new temperatures
+    plt.title(current_data['Time'])  # Set the plot title to the current timestamp
 
-# Create animation
-ani = animation.FuncAnimation(fig, update_frame, frames=len(data)-1, interval=200)
+ani = animation.FuncAnimation(fig, update_frame, frames=len(data), interval=200)  # Create animation
 
-# Save animation as gif
-ani.save('temperature_animation.gif', writer='pillow')
+# Extract the file name from the selected path
+file_name = os.path.basename(file_path)
+
+# Save animation with a dynamic file name
+save_name = 'GIF_IR_' + file_name + '.gif'  # Set the output file name
+ani.save(save_name, writer='pillow')  # Save the animation as a GIF

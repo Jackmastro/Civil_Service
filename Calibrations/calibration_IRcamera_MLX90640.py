@@ -1,10 +1,10 @@
-import time,board
+import time,board,busio
 import numpy as np
 import adafruit_mlx90640
 import matplotlib.pyplot as plt
 
 print("Initializing MLX90640")
-i2c = board.I2C() # setup I2C
+i2c = busio.I2C(board.SCL, board.SDA, frequency=800000) # setup I2C
 mlx = adafruit_mlx90640.MLX90640(i2c)
 mlx.refresh_rate = adafruit_mlx90640.RefreshRate.REFRESH_2_HZ # set refresh rate
 mlx_shape = (24,32)
@@ -26,9 +26,9 @@ while True:
         mlx.getFrame(frame) # read MLX temperatures into frame var
         data_array = (np.reshape(frame,mlx_shape)) # reshape to 24x32
         therm1.set_data(np.fliplr(data_array)) # flip left to right
-#         therm1.set_clim(vmin=np.min(data_array),vmax=np.max(data_array)) # set bounds
-        therm1.set_clim(vmin=20,vmax=35) # set bounds
-        cbar.update_normal(therm1) # update colorbar range
+        # therm1.set_clim(vmin=np.min(data_array),vmax=np.max(data_array)) # set bounds
+        # cbar.update_normal(therm1) # update colorbar range
+        therm1.set_clim(vmin=20,vmax=31) # set bounds
         plt.title(f"Max Temp: {np.max(data_array):.1f}C")
         plt.pause(0.001) # required
         #fig.savefig('mlx90640_test_fliplr.png',dpi=300,facecolor='#FCFCFC', bbox_inches='tight') # comment out to speed up
