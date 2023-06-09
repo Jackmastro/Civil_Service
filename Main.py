@@ -30,6 +30,7 @@ print("--- PROGRAM STARTED ---")
 print("--- SENSOR INITIALIZATION ---")
 
 overview_sensor_dict = {
+    "RTClock":   {"is_connected": True,  "sensor": None},
     "CO2in":     {"is_connected": True,  "sensor": None},
     "CO2out":    {"is_connected": True,  "sensor": None},
     "TrHout":    {"is_connected": True,  "sensor": None},
@@ -39,7 +40,6 @@ overview_sensor_dict = {
     "Flow":      {"is_connected": True,  "sensor": None},
     "NH3in":     {"is_connected": True,  "sensor": None},
     "NH3out":    {"is_connected": True,  "sensor": None},
-    "RTClock":   {"is_connected": True,  "sensor": None},
     "Scale":     {"is_connected": False, "sensor": None},
     "IRcamera":  {"is_connected": False, "sensor": None},
     "Thermero":  {"is_connected": False, "sensor": None}
@@ -56,6 +56,9 @@ overview_sensor_dict["TrHamb"]["sensor"] = TrHamb
 TrHcool = TrH_AM2315C("TrHcool", TCA)
 overview_sensor_dict["TrHcool"]["sensor"] = TrHcool
 print("Other sensors:")
+print("Clock:")
+RTClock = RTC_DS1307("RTClock")
+overview_sensor_dict["RTClock"]["sensor"] = RTClock
 CO2in = CO2_SCD30("CO2in", TCA)
 overview_sensor_dict["CO2in"]["sensor"] = CO2in
 CO2out = CO2_SCD30("CO2out", TCA)
@@ -64,10 +67,10 @@ Flow = Flow_SFM3119("Flow")
 overview_sensor_dict["Flow"]["sensor"] = Flow
 MCP = ADC_MCP3008("MCP")
 NH3out = NH3_MQ137("NH3out", MCP)
+NH3out = None
 overview_sensor_dict["NH3out"]["sensor"] = NH3out
 NH3in = NH3_MQ137("NH3in", MCP)
-print("Clock:")
-RTClock = RTC_DS1307("RTClock")
+NH3in = None
 print("Screen:")
 lcd = LCD_HD44780("LCD")
 print("Choosable sensors inside the chamber:")

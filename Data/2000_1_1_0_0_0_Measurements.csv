@@ -1,2 +1,2 @@
-Time,Tamb,rHamb,Tcool,rHcool,Tin,rHin,Tout,rHout,CO2in,CO2out,NH3in,NH3out,Flow,Scale
-,25.08,43.97,25.03,46.37,24.76,46.77,24.64,43.08,573.6,357.68,,0.0,0,6912.1
+Time,Tamb[°C],rHamb[%],Tcool[°C],rHcool[%],Tin[°C],rHin[%],Tout[°C],rHout[%],CO2in[ppm],CO2out[ppm],Flow[L/min],Scale[g]
+2000_1_1_0_0_0,25.47,40.81,25.56,43.4,25.39,42.73,25.21,39.79,601.04,380.88,1.91,6906.06
