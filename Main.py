@@ -66,8 +66,6 @@ MCP = ADC_MCP3008("MCP")
 NH3out = NH3_MQ137("NH3out", MCP)
 overview_sensor_dict["NH3out"]["sensor"] = NH3out
 NH3in = NH3_MQ137("NH3in", MCP)
-NH3out = None
-NH3in = None
 print("Clock:")
 RTClock = RTC_DS1307("RTClock")
 print("Screen:")
@@ -219,7 +217,7 @@ try:
     time_last_save_controller = time.time()
     control_rate = 2
     time_last_save_saving = time.time()
-    saving_rate = saving_rate_min / 60 # converted to seconds
+    saving_rate = saving_rate_min * 60 # converted to seconds
 
     while True:
         print(heater.pwm_duty_cycle)
@@ -241,7 +239,7 @@ try:
             time_last_save_controller = time.time()
             
         if time.time() - time_last_save_saving >= saving_rate:
-            [sensor["sensor"].save_data() for sensor in overview_sensor_dict.values() if sensor["is_connected"]]
+            [sensor["sensor"].save_data() for sensor in overview_sensor_dict.values() if sensor["is_connected"] and sensor["sensor"] is not None]
 
             time_last_save_saving = time.time()
 
@@ -250,9 +248,9 @@ except KeyboardInterrupt:
 
 finally:
     # Call the savers for last point
-    saver.save_sensors()
-    saver.save_IRcamera()
-    saver.save_Thermero()
+    saver.save_sensor_data(RTClock, TrHamb, TrHcool, TrHin, TrHout, CO2in, CO2out, NH3in, NH3out, Flow, Scale)
+    saver.save_IR_data(RTClock, IRcamera)
+    saver.save_Thermero_data(RTClock, Thermero)
     print("Last data saved.")
     print("--- CLEANUP STARTED ---")
     ventilation_fan.cleanup()

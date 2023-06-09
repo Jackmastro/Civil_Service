@@ -140,7 +140,7 @@ class IR_MLX90640(Sensor):
     def save_data_point(self):
         self.data_point_table.append(self.read_data_point())
 
-class RTC_DS1307(Sensor): ###############################TODO
+class RTC_DS1307(Sensor):
     def __init__(self, name=str) -> None:
         super().__init__(name)
 
@@ -360,7 +360,7 @@ class Thermero_DS18B20(Sensor):
     def save_data(self):
         # Populate order_data_vec using advanced indexing
         order_data_vec = np.zeros((1, 20))  # 20 sensors in total
-        order_data_vec[[value - 1 for value in self.physical_order_dict.values()]] = self.read_data(self) # Python indexing: value reduced by 1
+        order_data_vec[[value - 1 for value in self.physical_order_dict.values()]] = self.read_data() # Python indexing: value reduced by 1
         self.data_table.append(order_data_vec)
 
     def save_data_point(self):
@@ -457,6 +457,8 @@ class Thermero_DS18B20(Sensor):
 # MCP = ADC_MCP3008("MCP")
 # NH3out = NH3_MQ137("NH3out", MCP)
 # NH3in = NH3_MQ137("NH3in", MCP)
+# # NH3out = None
+# # NH3in = None
 # Thermero = Thermero_DS18B20("Thermero")
 # # Thermero = None
 # LCD = LCD_HD44780("LCD")
@@ -468,7 +470,7 @@ class Thermero_DS18B20(Sensor):
 #         LCD.print_second(Flow, IRcamera, Thermero, Scale)
 #         print("-----------------------------")
 #         time.sleep(8.0)
-
+# 
 # except KeyboardInterrupt:
 #     LCD.lcd.close(clear=True)
 #     print("You have successfully terminated the programm.")
