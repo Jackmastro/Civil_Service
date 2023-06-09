@@ -144,7 +144,7 @@ class IR_MLX90640(Sensor):
         self.sensor = adafruit_mlx90640.MLX90640(i2c)
 
         # Setup refresh rate. The camera captures data at a rates defined in RefreshRate class (available: 0_5,1,2,4,8,16,32,64).
-        self.sensor.refresh_rate = adafruit_mlx90640.RefreshRate.REFRESH_2_HZ
+#         self.sensor.refresh_rate = adafruit_mlx90640.RefreshRate.REFRESH_2_HZ
 ############################TODO CHECK IF WORKS ALSO WITHOUT
         print(f"Setup for {self.name} successfully completed.")
 
@@ -361,7 +361,7 @@ class Thermero_DS18B20(Sensor):
     def save_data(self):
         # Populate order_data_vec using advanced indexing
         order_data_vec = np.zeros((1, 20))  # 20 sensors in total
-        order_data_vec[[value - 1 for value in self.physical_order_dict.values()]] = self.read_data() # Python indexing: value reduced by 1
+        order_data_vec[0, [value - 1 for value in self.physical_order_dict.values()]] = self.read_data() # Python indexing: value reduced by 1
         self.data_table.append(order_data_vec)
 
     def save_data_point(self):
@@ -396,15 +396,18 @@ class Thermero_DS18B20(Sensor):
 #         print(dataCool, "\n")
 #         print("-----------------------------")
 #         time.sleep(3)
-
+    
 # IRcamera = IR_MLX90640("IRcamera")
 # try:
 #     while True:
-#         data = IRcamera.read_data()
-#         print(data)
+#         IRcamera.save_data()
+#         print(IRcamera.data_table)
 #         print("-----------------------------")
 #         time.sleep(3)
-
+# 
+# except KeyboardInterrupt:
+#     print("You have successfully terminated the programm.")
+    
 # Flow = Flow_SFM3119("Flow")
 # try:
 #     while True:
@@ -443,17 +446,17 @@ class Thermero_DS18B20(Sensor):
 #     
 # except KeyboardInterrupt:
 #     print("You have successfully terminated the programm.")
-
-Thermero = Thermero_DS18B20("Thermero")
-try:
-    while True:
-        Thermero.save_data()
-        print(Thermero.data_table)
-        print("-----------------------------")
-        time.sleep(3)
-        
-except KeyboardInterrupt:
-    print("You have successfully terminated the programm.")
+# 
+# Thermero = Thermero_DS18B20("Thermero")
+# try:
+#     while True:
+#         Thermero.save_data()
+#         print(Thermero.data_table)
+#         print("-----------------------------")
+#         time.sleep(3)
+#         
+# except KeyboardInterrupt:
+#     print("You have successfully terminated the programm.")
 
 # RTClock = RTC_DS1307("RTClock")
 # try:
