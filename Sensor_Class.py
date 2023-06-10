@@ -320,7 +320,7 @@ class Thermero_DS18B20(Sensor):
         gpio_Thermero_BCM = 4 #7
         GPIO.setup(gpio_Thermero_BCM, GPIO.IN)
 
-        # Sensor dictionary with address as key and Raspberry Pi ordered counter as value
+        # Sensor dictionary with address after 28- as key and Raspberry Pi ordered counter as value
         self.physical_order_dict = {
             "00000e743370": 12,  # A1
             "00000e74b77f": 3,   # A2
