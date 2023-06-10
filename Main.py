@@ -148,7 +148,7 @@ while True:
 
 # Critical relative humidity in %
 rH_crit_min = 50
-rH_crit_max = 90
+rH_crit_max = 80
 
 while True:
     input_choice_rH_crit = input("What critical RELATIVE HUMIDITY in %% do you want at the INLET of the chamber? [from {} to {}] ".format(rH_crit_min, rH_crit_max))
@@ -213,17 +213,24 @@ try:
     cooling_fan.set_state(is_on=True)
     time.sleep(1) # Needed
 
+    # Initialize time variables
     time_last_save_LCD = time.time()
     display_rate = 5
     is_first_turn = True
     time_last_save_controller = time.time()
     control_rate = 2
     time_last_save_saving = time.time()
-    saving_rate = saving_rate_min * 60 # converted to seconds
+    saving_rate = saving_rate_min * 60 # Conversion to seconds
 
     while True:
-        print(heater.pwm_duty_cycle)
-        print(TrHin.read_data_point())
+        if time.time() - time_last_save_controller >= control_rate:
+            controller.control(TrHamb, TrHin, TrHout, cooler, heater)
+
+            # Update time variable
+            time_last_save_controller = time.time()
+            print("cont")
+            print(heater.pwm_duty_cycle)
+            print(TrHin.read_data_point())
 
         if time.time() - time_last_save_LCD >= display_rate:
             if is_first_turn:
@@ -232,19 +239,15 @@ try:
             else:
                 lcd.print_second(Flow, IRcamera, Thermero, Scale)
                 is_first_turn = not is_first_turn
-                
+            
+            # Update time variable
             time_last_save_LCD = time.time()
             print("lcd")
-
-        if time.time() - time_last_save_controller >= control_rate:
-            controller.control(TrHamb, TrHin, TrHout, cooler, heater)
-                
-            time_last_save_controller = time.time()
-            print("cont")
             
         if time.time() - time_last_save_saving >= saving_rate:
             saver.append_data(overview_sensor_dict)
 
+            # Update time variable
             time_last_save_saving = time.time()
             print("sav")
 
@@ -275,10 +278,3 @@ finally:
     saver.save_Thermero_data(RTClock, Thermero)
     print("--- CSV GENERATION COMPLETED ---")
     print("--- PROGRAM TERMINATED ON {} ---".format(RTClock.read_data_point()))
-    
-# Traceback (most recent call last):
-#   File "/home/pi/Civil_Service/Main.py", line 275, in <module>
-#     saver.save_Thermero_data(RTClock, Thermero)
-#   File "/home/pi/Civil_Service/Saver_Class.py", line 78, in save_Thermero_data
-#     thermero_data_frame = pd.DataFrame(Thermero.data_table, columns=thermero_header + '[{}]'.format(Thermero.unit))
-# TypeError: can only concatenate list (not "str") to list
