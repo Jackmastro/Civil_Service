@@ -1,4 +1,4 @@
-# RTC Real Time Clock DS1307 library https://docs.circuitpython.org/projects/ds1307/en/latest/index.html
+# RTC Real Time Clock DS1307 library https://docs.circuitpython.org/projects/ds1307/en/latest/index.html (https://www.seeedstudio.com/blog/2020/07/07/raspberry-pi-rtc-tutorial-using-ds1307-and-ds3231-rtcs-with-raspberry-pi-m/)
 
 import time
 import board
@@ -11,7 +11,7 @@ rtc = adafruit_ds1307.DS1307(i2c)
 days = ("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday")
 
 # pylint: disable-msg=using-constant-test
-if True:  # change to True if you want to set the time!
+if False:  # change to True if you want to set the time!
     #                     year, mon, date, hour, min, sec, wday, yday, isdst
     t = time.struct_time((2023, 6, 12, 11, 57, 10, 3, -1, -1))
     # you must set year, mon, date, hour, min, sec and weekday
