@@ -34,7 +34,7 @@ class Controller():
         }
 
         # Set PID objects with ARW = Anti Reset Windup for the duty cycle [0-100]
-        self.pid_heater_chill = PID(Kp=7.0, Ki=0.008, Kd=0.0, output_limits=(0, 100))
+        self.pid_heater_chill = PID(Kp=7.0, Ki=0.01, Kd=0.0, output_limits=(0, 100))
         self.pid_heater_peak = PID(Kp=2.0, Ki=0.001, Kd=0.0, output_limits=(0, 100))
 
         print(f"Setup for {self.name} successfully completed.")
@@ -82,7 +82,6 @@ class Controller():
                     return {'cooler_state': True, 'heater_state': True, 'heater_Tref': self.Tref_out, 'phase': "peak"}
 
     def control(self, TrHamb, TrHin, TrHout, cooler, heater) -> None:
-        print("inside control")
         # Read data from sensors
         self.read_data_from_sensors(TrHamb, TrHin, TrHout)
 

@@ -228,9 +228,8 @@ try:
 
             # Update time variable
             time_last_save_controller = time.time()
-            print("cont")
-            print(heater.pwm_duty_cycle)
-            print(TrHin.read_data_point())
+            print(heater.pwm_duty_cycle, "%")
+            print(TrHin.read_data_point(), "°C")
 
         if time.time() - time_last_save_LCD >= display_rate:
             if is_first_turn:
@@ -242,14 +241,12 @@ try:
             
             # Update time variable
             time_last_save_LCD = time.time()
-            print("lcd")
             
         if time.time() - time_last_save_saving >= saving_rate:
             saver.append_data(overview_sensor_dict)
 
             # Update time variable
             time_last_save_saving = time.time()
-            print("sav")
 
 except KeyboardInterrupt:
     print("--- PROCESS TERMINATED ---")
