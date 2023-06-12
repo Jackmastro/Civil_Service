@@ -160,7 +160,7 @@ class IR_MLX90640(Sensor):
         return np.round(temperature_mean, 2)
     
     def save_data(self):
-        self.data_table.append(self.read_data()) # To convert data use: "np.reshape(data, self.shape)"
+        self.data_table.append(self.read_data())
     
     def save_data_point(self):
         self.data_table.append(self.read_data_point())
@@ -351,7 +351,13 @@ class Thermero_DS18B20(Sensor):
 
     def read_data(self):
         data = [single_sensor.get_temperature() for single_sensor in self.sensor]
+#         print(data)
+# [25.0625, 24.8125, 23.875, 24.9375, 25.5, 25.1875, 24.875, 24.375, 24.125, 24.6875, 24.75, 23.9375, 25.75, 24.1875, 24.6875, 24.5625, 25.25, 24.5625, 25.6875, 25.375]
         data = np.ravel(data) # Flatten to 1x20
+#         print(data)
+# [25.125  24.8125 23.875  24.9375 25.5    25.1875 24.875  24.375  24.125
+#  24.6875 24.75   24.     25.75   24.1875 24.6875 24.5    25.25   24.5625
+#  25.6875 25.375 ]
         return np.round(data, 2)
 
     def read_data_point(self):
@@ -362,6 +368,9 @@ class Thermero_DS18B20(Sensor):
         # Populate order_data_vec using advanced indexing
         order_data_vec = np.zeros((1, 20))  # 20 sensors in total
         order_data_vec[0, [value - 1 for value in self.physical_order_dict.values()]] = self.read_data() # Python indexing: value reduced by 1
+#         print(order_data_vec)
+#         [[25.19 24.69 24.81 24.38 24.88 25.75 24.94 25.25 24.12 25.38 25.5  25.06
+#   24.19 24.56 24.75 23.94 25.69 23.88 24.69 24.56]]
         self.data_table.append(order_data_vec)
 
     def save_data_point(self):
