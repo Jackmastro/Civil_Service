@@ -15,11 +15,6 @@ gpio_Tlarvero_pin = 4
 # Set GPIO pin as output
 GPIO.setup(gpio_Tlarvero_pin, GPIO.IN)
 
-# sensorSingle = W1ThermSensor()
-# # print(sensorSingle)
-# temperature = sensorSingle.get_temperature()
-# print("T =", temperature)
-# 
 # device_folders = os.listdir('/sys/bus/w1/devices/')
 # sensor_addresses = [folder for folder in device_folders if folder.startswith('28-')]
 # for folder in sensor_addresses:

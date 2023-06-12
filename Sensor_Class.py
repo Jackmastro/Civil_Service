@@ -143,9 +143,6 @@ class IR_MLX90640(Sensor):
         i2c = board.I2C()
         self.sensor = adafruit_mlx90640.MLX90640(i2c)
 
-        # Setup refresh rate. The camera captures data at a rates defined in RefreshRate class (available: 0_5,1,2,4,8,16,32,64).
-#         self.sensor.refresh_rate = adafruit_mlx90640.RefreshRate.REFRESH_2_HZ
-############################TODO CHECK IF WORKS ALSO WITHOUT
         print(f"Setup for {self.name} successfully completed.")
 
     def read_data(self):
@@ -351,27 +348,18 @@ class Thermero_DS18B20(Sensor):
 
     def read_data(self):
         data = [single_sensor.get_temperature() for single_sensor in self.sensor]
-#         print(data)
-# [25.0625, 24.8125, 23.875, 24.9375, 25.5, 25.1875, 24.875, 24.375, 24.125, 24.6875, 24.75, 23.9375, 25.75, 24.1875, 24.6875, 24.5625, 25.25, 24.5625, 25.6875, 25.375]
         data = np.ravel(data) # Flatten to 1x20
-#         print(data)
-# [25.125  24.8125 23.875  24.9375 25.5    25.1875 24.875  24.375  24.125
-#  24.6875 24.75   24.     25.75   24.1875 24.6875 24.5    25.25   24.5625
-#  25.6875 25.375 ]
-        return np.round(data, 2)
+        
+        data_ordered = np.zeros(20)  # 20 sensors in total
+        data_ordered[[value - 1 for value in self.physical_order_dict.values()]] = data # Python indexing: value reduced by 1
+        return np.round(data_ordered, 2)
 
     def read_data_point(self):
         temperature_mean = np.mean(self.read_data())
         return np.round(temperature_mean, 2)
 
     def save_data(self):
-        # Populate order_data_vec using advanced indexing
-        order_data_vec = np.zeros((1, 20))  # 20 sensors in total
-        order_data_vec[0, [value - 1 for value in self.physical_order_dict.values()]] = self.read_data() # Python indexing: value reduced by 1
-#         print(order_data_vec)
-#         [[25.19 24.69 24.81 24.38 24.88 25.75 24.94 25.25 24.12 25.38 25.5  25.06
-#   24.19 24.56 24.75 23.94 25.69 23.88 24.69 24.56]]
-        self.data_table.append(order_data_vec)
+        self.data_table.append(self.read_data())
 
     def save_data_point(self):
         self.data_table.append(self.read_data_point())
