@@ -39,7 +39,7 @@ class Saver:
                     rh_header = 'rH' + split_strings[1] + '[%]'
                     header = [temp_header, rh_header]
                 else:
-                    header = sensor_name + '[{}]'.format(overview_sensor_dict[sensor_name]["sensor"].unit)
+                    header = [sensor_name + '[{}]'.format(overview_sensor_dict[sensor_name]["sensor"].unit)]
                 
                 # Distinguish cases for mean values of IR and Thermero
                 if 'IR' in sensor_name or 'Thermero' in sensor_name:
@@ -47,7 +47,7 @@ class Saver:
                 else:
                     data = overview_sensor_dict[sensor_name]["sensor"].data_table
 
-                data_frame = pd.DataFrame(data, columns=[header])
+                data_frame = pd.DataFrame(data, columns=header)
                 data_frames.append(data_frame)
 
             else:
@@ -58,9 +58,9 @@ class Saver:
                     rh_header = 'rH' + split_strings[1] + '[%]'
                     header = [temp_header, rh_header]
                 else:
-                    header = sensor_name
+                    header = [sensor_name]
 
-                data_frame = pd.DataFrame(columns=[header])
+                data_frame = pd.DataFrame(columns=header)
                 data_frames.append(data_frame)
 
         # Concatenate data frames

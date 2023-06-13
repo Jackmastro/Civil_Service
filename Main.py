@@ -8,7 +8,7 @@ from Chip_Class import *
 from Sensor_Class import *
 from Actuator_Class import *
 from Controller_Class import *
-from Saver_Class import *
+from Saver_Class_2 import *
 
 GPIO.setmode(GPIO.BCM)
 
@@ -196,7 +196,6 @@ while not process_is_started:
     else:
         print("Wrong choice. Please enter either 'y' or 'n'.")
 
-######################## TODO CALL THE RTC
 print("Saver:")
 time_start_process_str = RTClock.read_data_point()
 print(time_start_process_str)
@@ -261,16 +260,13 @@ finally:
     lcd.cleanup()
     # NOT GPIO.cleanup(), the heater and cooler will turn on!
     print("--- CLEANUP COMPLETED ---")
+    print("--- SAVING LAST DATA STARTED ---")
+    for i in range(0,5):
+        saver.append_data(overview_sensor_dict)
+        time.sleep(3)
+    print("--- SAVING LAST DATA COMPLETED ---")
     print("--- CSV GENERATION STARTED ---")
-    saver.append_data(overview_sensor_dict)
-    time.sleep(3)
-    IRcamera.save_data()
-    RTClock.save_data()
-    time.sleep(3)
-    IRcamera.save_data()
-    RTClock.save_data()
-    print("Last data saved.")
-    saver.save_sensor_data(RTClock, TrHamb, TrHcool, TrHin, TrHout, CO2in, CO2out, NH3in, NH3out, Flow, Scale)
+    saver.save_sensor_data(overview_sensor_dict)
     saver.save_IR_data(RTClock, IRcamera)
     saver.save_Thermero_data(RTClock, Thermero)
     print("--- CSV GENERATION COMPLETED ---")
