@@ -31,18 +31,18 @@ print("--- SENSOR INITIALIZATION ---")
 
 overview_sensor_dict = {
     "RTClock":   {"is_connected": True,  "sensor": None},
-    "CO2in":     {"is_connected": True,  "sensor": None},
-    "CO2out":    {"is_connected": True,  "sensor": None},
-    "TrHout":    {"is_connected": True,  "sensor": None},
-    "TrHin":     {"is_connected": True,  "sensor": None},
     "TrHamb":    {"is_connected": True,  "sensor": None},
     "TrHcool":   {"is_connected": True,  "sensor": None},
-    "Flow":      {"is_connected": True,  "sensor": None},
-    "NH3in":     {"is_connected": True,  "sensor": None},
-    "NH3out":    {"is_connected": True,  "sensor": None},
-    "Scale":     {"is_connected": False, "sensor": None},
+    "TrHin":     {"is_connected": True,  "sensor": None},
+    "Thermero":  {"is_connected": False, "sensor": None},
     "IRcamera":  {"is_connected": False, "sensor": None},
-    "Thermero":  {"is_connected": False, "sensor": None}
+    "TrHout":    {"is_connected": True,  "sensor": None},
+    "CO2in":     {"is_connected": True,  "sensor": None},
+    "CO2out":    {"is_connected": True,  "sensor": None},
+    "NH3in":     {"is_connected": False,  "sensor": None},
+    "NH3out":    {"is_connected": False,  "sensor": None},
+    "Flow":      {"is_connected": True,  "sensor": None},
+    "Scale":     {"is_connected": False, "sensor": None}
 }
 
 print("Needed to control the process:")
@@ -70,10 +70,11 @@ NH3out = NH3_MQ137("NH3out", MCP)
 NH3out = None
 overview_sensor_dict["NH3out"]["sensor"] = NH3out
 NH3in = NH3_MQ137("NH3in", MCP)
-NH3in = None
+# NH3in = None
+overview_sensor_dict["NH3out"]["sensor"] = NH3in
 print("Screen:")
 lcd = LCD_HD44780("LCD")
-print("Choosable sensors inside the chamber:")
+print("Choosable sensors:")
 # Scale
 if is_connected("Scale"):
     overview_sensor_dict["Scale"]["is_connected"] = True
@@ -227,8 +228,8 @@ try:
 
             # Update time variable
             time_last_save_controller = time.time()
-            print(heater.pwm_duty_cycle, "%")
-            print(TrHin.read_data_point(), "°C")
+#             print(heater.pwm_duty_cycle, "%")
+#             print(TrHin.read_data_point(), "°C")
 
         if time.time() - time_last_save_LCD >= display_rate:
             if is_first_turn:
@@ -261,9 +262,9 @@ finally:
     # NOT GPIO.cleanup(), the heater and cooler will turn on!
     print("--- CLEANUP COMPLETED ---")
     print("--- SAVING LAST DATA STARTED ---")
-    for i in range(0,7):
-        saver.append_data(overview_sensor_dict)
-        time.sleep(3)
+#     for i in range(0,2):
+#         saver.append_data(overview_sensor_dict)
+#         time.sleep(3)
     print("--- SAVING LAST DATA COMPLETED ---")
     print("--- CSV GENERATION STARTED ---")
     saver.save_sensor_data(overview_sensor_dict)

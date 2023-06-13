@@ -118,10 +118,8 @@ class Controller():
             else:
                 raise ValueError('phase has to be "chill" or "peak". Received: {}'.format(self.next_dict['phase']))
             
-        print(self.previous_dict)
         duty_cycle = round(float(duty_cycle), 2)
         heater.set_duty_cycle(duty_cycle)
 
         # Update dictionaries
         self.previous_dict = self.next_dict
-        print(self.next_dict)
