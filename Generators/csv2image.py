@@ -15,6 +15,9 @@ file_path = filedialog.askopenfilename()
 # Extract the file name from the selected path
 file_name = os.path.basename(file_path)
 
+# File name without the extension
+file_name_without_extension = os.path.splitext(file_name)[0]
+
 # Distinguish between IR camera or Thermero
 if 'IR' in file_name:
     shape = (24, 32)
@@ -77,4 +80,5 @@ def update_frame(frame):
 update_frame(0)  # Only a single frame, so use index 0
 
 # Save the final image
-plt.savefig('output_image.png')
+save_name = file_name_without_extension + '_Image.png'  # Set the output file name
+plt.savefig(save_name)

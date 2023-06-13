@@ -16,6 +16,9 @@ file_path = filedialog.askopenfilename()
 # Extract the file name from the selected path
 file_name = os.path.basename(file_path)
 
+# File name without the extension
+file_name_without_extension = os.path.splitext(file_name)[0]
+
 # Distinguish between IR camera or Thermero
 if 'IR' in file_name:
     shape = (24, 32)
@@ -87,7 +90,6 @@ def update_frame(frame):
 ani = animation.FuncAnimation(fig, update_frame, frames=len(data), interval=200)
 
 # Save animation with a dynamic file name
-save_name = file_name + '_GIF.gif'  # Set the output file name
-# remove .csv expansion
+save_name = file_name_without_extension + '_GIF.gif'  # Set the output file name
 ani.save(save_name, writer='pillow')  # Save the animation as a GIF
 # save in the GIF data

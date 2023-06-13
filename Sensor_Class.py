@@ -134,6 +134,7 @@ class IR_MLX90640(Sensor):
         super().__init__(name)
 
         self.unit = "°C"
+        self.data_table_mean = []
 
         # Setup camera pixel size 
         self.shape = (24, 32)
@@ -156,10 +157,14 @@ class IR_MLX90640(Sensor):
         return np.round(temperature_mean, 2)
     
     def save_data(self):
-        self.data_table.append(self.read_data())
+        data = self.read_data()
+        self.data_table.append(data)
+
+        data_mean = np.round(np.mean(data), 2)
+        self.data_table_mean.append(data_mean)
     
     def save_data_point(self):
-        self.data_table.append(self.read_data_point())
+        self.data_table_mean.append(self.read_data_point())
 
 class Flow_SFM3119(Sensor):
     def __init__(self, name=str) -> None:
@@ -312,6 +317,7 @@ class Thermero_DS18B20(Sensor):
         super().__init__(name)
 
         self.unit = "°C"
+        self.data_table_mean = []
 
         gpio_Thermero_BCM = 4 #7
         GPIO.setup(gpio_Thermero_BCM, GPIO.IN)
@@ -358,10 +364,14 @@ class Thermero_DS18B20(Sensor):
         return np.round(temperature_mean, 2)
 
     def save_data(self):
-        self.data_table.append(self.read_data())
+        data = self.read_data()
+        self.data_table.append(data)
+        
+        data_mean = np.round(np.mean(data), 2)
+        self.data_table_mean.append(data_mean)
 
     def save_data_point(self):
-        self.data_table.append(self.read_data_point())
+        self.data_table_mean.append(self.read_data_point())
 
 #####################################################################################
 # tca = Multiplexer_TCA9548A("TCA")
