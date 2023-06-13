@@ -61,10 +61,11 @@ while not valid_range:
             print("Invalid range! Please enter a upper range that is between the ranges of time of the file.")
 
     except ValueError:
-        print("Invalid format! Please enter the range in the format: YYYY-MM-DD HH:MM:SS")
+        print("Invalid format! Please enter the range in the format: YYYY_MM_DD_HH_MM_SS")
 
 # Cut the data within the specified range
 data = data.loc[(data['Time'] >= lower_range) & (data['Time'] <= upper_range)]
+print(data)
 
 # Setup the figure for plotting
 fig, ax = plt.subplots(figsize=(12, 7))
@@ -103,3 +104,5 @@ if not os.path.exists(save_dir):
 # Save animation with a dynamic file name in the specified folder
 save_path = os.path.join(save_dir, save_name)
 ani.save(save_path, writer='pillow')  # Save the animation as a GIF
+
+print(f"File {save_name} correctly saved in {save_dir}.")

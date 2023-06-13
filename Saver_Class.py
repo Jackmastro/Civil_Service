@@ -88,7 +88,7 @@ class Saver:
             clock_header = ['Time']
             clock_data_frame = pd.DataFrame(RTClock.data_table, columns=clock_header)
             
-            thermero_header = ['{}{} [{}]'.format(row, col, Thermero.unit) for row in 'ABCD' for col in range(1, 6)]
+            thermero_header = ['{}{}[{}]'.format(row, col, Thermero.unit) for row in 'ABCD' for col in range(1, 6)]
             thermero_data_frame = pd.DataFrame(Thermero.data_table, columns=thermero_header)
 
             # Concatenate data frames and call csv

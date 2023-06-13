@@ -54,6 +54,7 @@ closest_time = data['Time'].iloc[(data['Time'] - time_image).abs().argsort()[0]]
 
 # Extract the data for the closest_time
 data = data[data['Time'] == closest_time]
+print(data)
 
 # Setup the figure for plotting
 fig, ax = plt.subplots(figsize=(12, 7))
@@ -92,3 +93,5 @@ if not os.path.exists(save_dir):
 # Save animation with a dynamic file name in the specified folder
 save_path = os.path.join(save_dir, save_name)
 plt.savefig(save_path)
+
+print(f"File {save_name} correctly saved in {save_dir}.")
