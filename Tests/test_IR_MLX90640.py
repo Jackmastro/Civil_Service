@@ -12,7 +12,6 @@ import board
 import numpy as np
 import adafruit_mlx90640
 import RPi.GPIO as GPIO
-# import matplotlib.pyplot as plt
 
 # Set-up I2C bus
 i2c = board.I2C()
@@ -27,7 +26,7 @@ mlx.refresh_rate = adafruit_mlx90640.RefreshRate.REFRESH_2_HZ
 mlx_shape = (24,32)
 
 # Set-up array for storing all 768 temperatures (24x32 pixels)
-frame = np.zeros((mlx_shape[0]*mlx_shape[1],1))
+frame = np.zeros((mlx_shape[0]*mlx_shape[1], 1))
     
 try:
     while True:

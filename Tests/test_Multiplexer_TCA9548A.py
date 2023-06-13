@@ -10,7 +10,7 @@ import adafruit_scd30
 import time
                          
 # Create I2C bus as normal
-i2c = board.I2C()  # uses board.SCL and board.SDA
+i2c = board.I2C()
 
 # Create the TCA9548A (multiplexer) object and give it the I2C bus
 tca = adafruit_tca9548a.TCA9548A(i2c)
@@ -30,18 +30,15 @@ TrH_in = adafruit_ahtx0.AHTx0(tca[3])
 TrH_amb = adafruit_ahtx0.AHTx0(tca[4])
 TrH_cool = adafruit_ahtx0.AHTx0(tca[5])
 
-
 try: 
     while True:
         print(TrH_amb.temperature, TrH_amb.relative_humidity)
         print(TrH_cool.temperature, TrH_cool.relative_humidity)
         print(TrH_in.temperature, TrH_in.relative_humidity)
         print(TrH_out.temperature, TrH_out.relative_humidity)
-#         print(CO2_in.CO2, TrH_out.temperature, TrH_in.temperature, TrH_amb.temperature, TrH_cool.temperature)
-#         print(CO2_out.CO2, TrH_out.relative_humidity, TrH_in.relative_humidity, TrH_amb.relative_humidity, TrH_cool.relative_humidity)
-
+        print(CO2_in.CO2, TrH_out.temperature, TrH_in.temperature, TrH_amb.temperature, TrH_cool.temperature)
+        print(CO2_out.CO2, TrH_out.relative_humidity, TrH_in.relative_humidity, TrH_amb.relative_humidity, TrH_cool.relative_humidity)
         time.sleep(5.0)
 
 except KeyboardInterrupt:
-    
     print("You have successfully terminated the programm.")

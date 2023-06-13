@@ -1,13 +1,12 @@
-from gpiozero import OutputDevice # More suitable for fans, motors and pumps instead of LED
-import time 
-
-# Define pause interval 
-t = 5.0
+from gpiozero import OutputDevice
+import time
 
 # Define pin locations 
 Vent_fans = OutputDevice(24, active_high=False)
 Suct_fans = OutputDevice(23, active_high=False)
 Cool_fan = OutputDevice(22, active_high=False)
+
+t = 5.0
 
 try: 
     while True:
@@ -25,18 +24,13 @@ try:
             time.sleep(t)
             Cool_fan.off()
         else:
-            print("Svegliati")
+            print("Wrong input")
 
 except KeyboardInterrupt:
-# Cleanup RPi pins
-    Vent_fans.close()
-    Suct_fans.close()
-    Cool_fan.close()
-    
-    print("\nYou have successfully terminated the programm.")
+    print("You have successfully interrupted the programm.")
     
 finally:
-# Cleanup RPi pins
     Vent_fans.close()
     Suct_fans.close()
     Cool_fan.close()
+    print("You have successfully cleaned the pins.")

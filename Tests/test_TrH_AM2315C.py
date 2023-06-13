@@ -8,12 +8,13 @@ import adafruit_tca9548a
 import time
 from gpiozero import OutputDevice
 
-# Set suction fan
-Suct_fans = OutputDevice(19, active_high=False)
+# Set fan
+Suct_fans = OutputDevice(23, active_high=False)
 Suct_fans.on()
              
 # Create I2C bus as normal
-i2c = board.I2C()  # uses board.SCL and board.SDA
+i2c = board.I2C()
+
 # Create the TCA9548A (multiplexer) object and give it the I2C bus
 tca = adafruit_tca9548a.TCA9548A(i2c)
 
@@ -25,13 +26,15 @@ TrH_cool = adafruit_ahtx0.AHTx0(tca[5])
 
 try: 
     while True:
-        
         print(TrH_out.temperature, TrH_in.temperature, TrH_amb.temperature, TrH_cool.temperature)
         print(TrH_out.relative_humidity, TrH_in.relative_humidity, TrH_amb.relative_humidity, TrH_cool.relative_humidity)
 
         time.sleep(3.0)
 
 except KeyboardInterrupt:
+    print("You have successfully interrupted the programm.")
+
+finally:
     Suct_fans.off()
     Suct_fans.close()
-    print("You have successfully terminated the programm.")
+    print("You have successfully cleaned the pins.")

@@ -2,35 +2,28 @@ import RPi.GPIO as GPIO
 import time
 from gpiozero import OutputDevice
 
-Suct_fans = OutputDevice(22, active_high=False)
-
-# Set GPIO mode to Board numbering
+# Set GPIO mode to BCM numbering
 GPIO.setmode(GPIO.BCM)
+
+# Set fan
+Suct_fans = OutputDevice(23, active_high=False)
 
 # Set GPIO pin number
 gpio_Heater_pin = 12
 
-# # Set GPIO pin number
-# gpio_Fan_pin = 38
-
 # Set GPIO pin as output
 GPIO.setup(gpio_Heater_pin, GPIO.OUT)
-
-# # Set GPIO pin as output
-# GPIO.setup(gpio_Fan_pin, GPIO.OUT)
-
-#         # Set GPIO pin to high
-#         GPIO.output(gpio_Fan_pin, GPIO.HIGH)
-Suct_fans.on()
 
 # Set PWM frequency in Hz
 pwm_frequency = 1
 pwm_Heater = GPIO.PWM(gpio_Heater_pin, pwm_frequency)
 
 # Set PWM duty cycle in %
-pwm_dutyCycle = 10
+pwm_dutyCycle = 0
 
 try:
+    Suct_fans.on()
+
     Start_input = 'n'
     
     while Start_input != 'y':
@@ -39,8 +32,6 @@ try:
 
     # Check if the input
         if Start_input == 'y':
-        # Set GPIO pin to high
-#             GPIO.output(gpio_Heater_pin, GPIO.HIGH)
             pwm_Heater.start(pwm_dutyCycle)
         
             print("Heater started")
@@ -63,14 +54,10 @@ try:
         time.sleep(5.0)
 
 except KeyboardInterrupt:
-#     # Set GPIO pin to high
-#     GPIO.output(gpio_Fan_pin, GPIO.LOW)
+    print("You have successfully interrupted the programm.")
+
+finally:
     Suct_fans.off()
-    
-    # Stop PWM
+    Suct_fans.close()
     pwm_Heater.stop()
-
-    # Clean up GPIO
-    GPIO.cleanup()
-
-    print("\nKeyboard Interrupt: End program")
+    print("You have successfully cleaned the pins and turned off the heater.")

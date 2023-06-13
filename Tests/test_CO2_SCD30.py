@@ -1,20 +1,20 @@
+# CO2 SCD30 library https://github.com/adafruit/Adafruit_CircuitPython_SCD30
+# sudo i2cdetect -y 1 (0x61)
 import time
 import board
 import adafruit_scd30
 import adafruit_tca9548a
-from gpiozero import OutputDevice 
-import RPi.GPIO as GPIO
+from gpiozero import OutputDevice # Uses BCM numbering
 
 # Set suction fan
-Suct_fans = OutputDevice(19, active_high=False)
+Suct_fans = OutputDevice(23, active_high=False)
 Suct_fans.on()
 
-
 # Create I2C bus as normal. Datasheet recommends starting at 50KHz
-i2c = board.I2C()  # uses board.SCL and board.SDA
+i2c = board.I2C()
 # Create the TCA9548A (multiplexer) object and give it the I2C bus
 tca = adafruit_tca9548a.TCA9548A(i2c)
-# Define CO2 sensors
+# Define CO2 sensors at channel zero and one
 CO2_in = adafruit_scd30.SCD30(tca[0])
 CO2_out = adafruit_scd30.SCD30(tca[1])
 
@@ -30,13 +30,8 @@ try:
         
 except KeyboardInterrupt:
     print("You have successfully interrupted the programm.")
+
 finally:
     Suct_fans.off()
     Suct_fans.close()
-#     GPIO.cleanup()
     print("You have successfully cleaned the pins.")
-    
-    
-    
-    
-        

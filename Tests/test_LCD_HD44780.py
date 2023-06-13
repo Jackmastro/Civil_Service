@@ -1,4 +1,5 @@
 # LCD HD44780 library https://pypi.org/project/RPLCD/ (Documentation: https://rplcd.readthedocs.io/en/latest/index.html)
+# sudo i2cdetect -y 1 (0x27)
 from RPLCD.i2c import CharLCD
 import time
 
@@ -15,7 +16,8 @@ try:
     
 except KeyboardInterrupt:
     lcd.close(clear=True)
-    print("You have successfully interrupted the programm.")
+    print("You have successfully terminated the programm.")
     
 finally:
     lcd.close(clear=True)
+    print("You have successfully cleaned the LCD.")

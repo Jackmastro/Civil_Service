@@ -1,16 +1,22 @@
+from gpiozero import OutputDevice
 import RPi.GPIO as GPIO
 import time
 
-# Set GPIO mode to Board numbering
-GPIO.setmode(GPIO.BOARD)
+# Set GPIO mode to BCM numbering
+GPIO.setmode(GPIO.BCM)
+
+# Set fan
+Suct_fans = OutputDevice(23, active_high=False)
 
 # Set GPIO pin number
-gpio_Cooler_pin = 33
+gpio_Cooler_pin = 13
 
 # Set GPIO pin as output
 GPIO.setup(gpio_Cooler_pin, GPIO.OUT)
 
 try:
+    Suct_fans.on()
+
     Start_input = 'n'
     
     while Start_input != 'y':
@@ -41,11 +47,10 @@ try:
         time.sleep(5.0)
 
 except KeyboardInterrupt:
-    GPIO.output(gpio_Cooler_pin, GPIO.LOW)
-    print("\nKeyboard Interrupt: Cooler stopped")
+    print("You have successfully interrupted the programm.")
+
 finally:
-    # Stop fan
     Suct_fans.off()
     Suct_fans.close()
-    print("\nEnded program")
-
+    GPIO.output(gpio_Cooler_pin, GPIO.LOW)
+    print("You have successfully cleaned the pins and turned off the cooler.")
