@@ -88,4 +88,6 @@ ani = animation.FuncAnimation(fig, update_frame, frames=len(data), interval=200)
 
 # Save animation with a dynamic file name
 save_name = file_name + '_GIF.gif'  # Set the output file name
+# remove .csv expansion
 ani.save(save_name, writer='pillow')  # Save the animation as a GIF
+# save in the GIF data

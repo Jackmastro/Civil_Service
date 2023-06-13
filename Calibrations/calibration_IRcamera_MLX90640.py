@@ -29,7 +29,7 @@ while True:
         therm1.set_data(np.fliplr(data_array)) # flip left to right
         # therm1.set_clim(vmin=np.min(data_array),vmax=np.max(data_array)) # set bounds
         # cbar.update_normal(therm1) # update colorbar range
-        therm1.set_clim(vmin=20,vmax=31) # set bounds
+        therm1.set_clim(vmin=0,vmax=30) # set bounds
         plt.title(f"Max Temp: {np.max(data_array):.1f}C")
         plt.pause(0.001) # required
         #fig.savefig('mlx90640_test_fliplr.png',dpi=300,facecolor='#FCFCFC', bbox_inches='tight') # comment out to speed up

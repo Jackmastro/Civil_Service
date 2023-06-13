@@ -25,7 +25,7 @@ class Saver:
         # Save the .csv file
         data_frame.to_csv(file_path, index=False)
 
-        print(f"CSV file '{file_name}' successfully created.")
+        print(f"CSV file '{file_name}' successfully created in folder '{folder_path}'.")
 
     def save_sensor_data(self, RTClock, TrHamb, TrHcool, TrHin, TrHout, CO2in, CO2out, NH3in, NH3out, Flow, Scale) -> None:
         clock_header = ['Time']

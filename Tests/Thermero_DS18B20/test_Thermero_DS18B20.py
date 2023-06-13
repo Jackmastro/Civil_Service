@@ -27,6 +27,7 @@ loop = 1
 try:
     while True:
         count = 1
+        Tbefore= time.time()
         for sensor in W1ThermSensor.get_available_sensors([Sensor.DS18B20]):
             print(count, "  ID: %s     T: %.2f" % (sensor.id, sensor.get_temperature()))
             
@@ -35,6 +36,8 @@ try:
             count += 1
         
         loop += 1
+        Tafter = time.time()
+        print("time taken {}".format(Tafter-Tbefore))
     
 except KeyboardInterrupt:
     print("You have successfully terminated the programm.")

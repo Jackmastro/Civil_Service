@@ -23,9 +23,8 @@ import argparse
 from sensirion_i2c_driver import LinuxI2cTransceiver, I2cConnection, CrcCalculator
 from sensirion_driver_adapters.i2c_adapter.i2c_channel import I2cChannel
 from sensirion_i2c_sfm_sf06.device import SfmSf06Device
-# Thermero DS18B20 https://pypi.org/project/w1thermsensor/
-from w1thermsensor import W1ThermSensor
-from w1thermsensor import Sensor as SensorType
+# Thermero DS18B20 https://github.com/rgbkrk/ds18b20
+from ds18b20 import DS18B20
 # Scale HX711 https://github.com/gandalf15/HX711.git#egg=HX711&subdirectory=HX711_Python3
 import hx711
 # NH3 MQ137 sensor: https://tutorials-raspberrypi.com/configure-and-read-out-the-raspberry-pi-gas-sensor-mq-x/
@@ -342,7 +341,7 @@ class Thermero_DS18B20(Sensor):
         }
 
         # Set all the 1-wire temperature sensors of the type of interest
-        self.sensor = W1ThermSensor.get_available_sensors([SensorType.DS18B20])
+        self.sensor = DS18B20.get_all_sensors()
 
         print(f"Setup for {self.name} successfully completed.")
 
