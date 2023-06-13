@@ -6,7 +6,7 @@ from Sensor_Class import *
 
 class Saver:
     def __init__(self, time_start_process=str) -> None:
-        self.name = time_start_process + "_Measurements" # YYMMDD_HHMMSS_Measurements
+        self.name = time_start_process + "_Data" # YYMMDD_HHMMSS_Measurements
 
         print("Setup for saver successfully completed.")
         

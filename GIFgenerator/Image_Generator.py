@@ -2,7 +2,6 @@ import os
 import tkinter as tk
 from tkinter import filedialog
 import matplotlib.pyplot as plt
-import matplotlib.animation as animation
 import pandas as pd
 import numpy as np
 
@@ -30,37 +29,28 @@ data = pd.read_csv(file_path)
 # Convert column to datetime format
 data['Time'] = pd.to_datetime(data['Time'], format='%Y_%m_%d_%H_%M_%S')
 
-# Ask for lower and higher ranges
-valid_range = False
-while not valid_range:
-    lower_range = input("Enter the lower range (format: YYYY-MM-DD HH:MM:SS): ")
-    upper_range = input("Enter the higher range (format: YYYY-MM-DD HH:MM:SS): ")
+# Ask for the time for the image
+valid_time = False
+while not valid_time:
+    time_image = input("Enter the time for the image (format: YYYY-MM-DD HH:MM:SS): ")
 
     try:
-        # Convert ranges into datetime objects
-        lower_range = pd.to_datetime(lower_range)
-        upper_range = pd.to_datetime(upper_range)
+        # Convert time_image into datetime object
+        time_image = pd.to_datetime(time_image)
 
-        if lower_range <= upper_range:
-            valid_range = True
-        else:
-            print("Invalid range! Please enter a lower range that is less than or equal to the higher range.")
-
-        if (data['Time'].iloc[0] <= lower_range <= data['Time'].iloc[-1]):
+        if (data['Time'].iloc[0] <= time_image <= data['Time'].iloc[-1]):
             valid_time = True
         else:
-            print("Invalid range! Please enter a lower range that is between the ranges of time of the file.")
-        
-        if (data['Time'].iloc[0] <= upper_range <= data['Time'].iloc[-1]):
-            valid_time = True
-        else:
-            print("Invalid range! Please enter a upper range that is between the ranges of time of the file.")
+            print("Invalid range! Please enter a time that is between the ranges of time of the file.")
 
     except ValueError:
         print("Invalid format! Please enter the range in the format: YYYY-MM-DD HH:MM:SS")
 
-# Cut the data within the specified range
-data = data.loc[(data['Time'] >= lower_range) & (data['Time'] <= upper_range)]
+# Find the closest time in the data to the given time_image
+closest_time = data['Time'].iloc[(data['Time'] - time_image).abs().argsort()[0]]
+
+# Extract the data for the closest_time
+data = data[data['Time'] == closest_time]
 
 # Setup the figure for plotting
 fig, ax = plt.subplots(figsize=(12, 7))
@@ -83,9 +73,8 @@ def update_frame(frame):
     plot.set_data(np.fliplr(temperatures))  # Update the plot with new temperatures
     plt.title(current_data['Time'])  # Set the plot title to the current timestamp
 
-# Create animation
-ani = animation.FuncAnimation(fig, update_frame, frames=len(data), interval=200)
+# Update the plot with the final frame
+update_frame(0)  # Only a single frame, so use index 0
 
-# Save animation with a dynamic file name
-save_name = file_name + '_GIF.gif'  # Set the output file name
-ani.save(save_name, writer='pillow')  # Save the animation as a GIF
+# Save the final image
+plt.savefig('output_image.png')
