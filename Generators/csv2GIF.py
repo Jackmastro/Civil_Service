@@ -1,3 +1,4 @@
+# Colormaps https://matplotlib.org/stable/tutorials/colors/colormaps.html
 import os
 import tkinter as tk
 from tkinter import filedialog
@@ -36,13 +37,13 @@ data['Time'] = pd.to_datetime(data['Time'], format='%Y_%m_%d_%H_%M_%S')
 # Ask for lower and higher ranges
 valid_range = False
 while not valid_range:
-    lower_range = input("Enter the lower range (format: YYYY-MM-DD HH:MM:SS): ")
-    upper_range = input("Enter the higher range (format: YYYY-MM-DD HH:MM:SS): ")
+    lower_range = input("Enter the lower range (format: YYYY_MM_DD_HH_MM_SS): ")
+    upper_range = input("Enter the upper range (format: YYYY_MM_DD_HH_MM_SS): ")
 
     try:
         # Convert ranges into datetime objects
-        lower_range = pd.to_datetime(lower_range)
-        upper_range = pd.to_datetime(upper_range)
+        lower_range = pd.to_datetime(lower_range, format='%Y_%m_%d_%H_%M_%S')
+        upper_range = pd.to_datetime(upper_range, format='%Y_%m_%d_%H_%M_%S')
 
         if lower_range <= upper_range:
             valid_range = True
@@ -91,5 +92,14 @@ ani = animation.FuncAnimation(fig, update_frame, frames=len(data), interval=200)
 
 # Save animation with a dynamic file name
 save_name = file_name_without_extension + '_GIF.gif'  # Set the output file name
-ani.save(save_name, writer='pillow')  # Save the animation as a GIF
-# save in the GIF data
+
+# Define the save directory path
+save_dir = os.path.join(os.getcwd(), '..', 'GIFs')
+
+# Create the save directory if it doesn't exist
+if not os.path.exists(save_dir):
+    os.makedirs(save_dir)
+
+# Save animation with a dynamic file name in the specified folder
+save_path = os.path.join(save_dir, save_name)
+ani.save(save_path, writer='pillow')  # Save the animation as a GIF

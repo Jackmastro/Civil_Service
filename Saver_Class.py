@@ -6,7 +6,7 @@ from Sensor_Class import *
 
 class Saver:
     def __init__(self, time_start_process=str) -> None:
-        self.name = time_start_process + "_Data" # YYMMDD_HHMMSS_Measurements
+        self.name = time_start_process + "_Data" # YY_MM_DD_HH_MM_SS_Data
 
         print("Setup for saver successfully completed.")
         
@@ -27,26 +27,40 @@ class Saver:
 
         print(f"CSV file '{file_name}' successfully created in folder '{folder_path}'.")
 
-    def save_sensor_data(self, RTClock, TrHamb, TrHcool, TrHin, TrHout, CO2in, CO2out, NH3in, NH3out, Flow, Scale) -> None:
-        clock_header = ['Time']
-        clock_data_frame = pd.DataFrame(RTClock.data_table, columns=clock_header)
+    def save_sensor_data(self, overview_sensor_dict=dict) -> None:
+        data_frames  =[]
 
-        data_frames = [clock_data_frame]
+        for sensor_name in overview_sensor_dict.keys():
+            if overview_sensor_dict[sensor_name]["is_connected"] and overview_sensor_dict[sensor_name]["sensor"] is not None:
+                # Distinguish cases for header of temperature and relative humidity sensors
+                if 'TrH' in sensor_name:
+                    split_strings = sensor_name.split('TrH', 1)  # Split the string after 'TrH', maximum 1 split
+                    temp_header = 'T' + split_strings[1] + '[°C]'
+                    rh_header = 'rH' + split_strings[1] + '[%]'
+                    header = [temp_header, rh_header]
+                else:
+                    header = [sensor_name + '[{}]'.format(overview_sensor_dict[sensor_name]["sensor"].unit)]
+                
+                # Distinguish cases for mean values of IR and Thermero
+                if 'IR' in sensor_name or 'Thermero' in sensor_name:
+                    data = overview_sensor_dict[sensor_name]["sensor"].data_table_mean
+                else:
+                    data = overview_sensor_dict[sensor_name]["sensor"].data_table
 
-        # Append the temperature and relative humidity data_tables
-        temperature_humidity_sensors = [(TrHamb, 'Tamb', 'rHamb'), (TrHcool, 'Tcool', 'rHcool'),
-                                        (TrHin, 'Tin', 'rHin'), (TrHout, 'Tout', 'rHout')]
-        for sensor, temp_header, rh_header in temperature_humidity_sensors:
-            if sensor is not None:
-                data_frame = pd.DataFrame(sensor.data_table, columns=[temp_header + '[°C]', rh_header + '[%]'])
+                data_frame = pd.DataFrame(data, columns=header)
                 data_frames.append(data_frame)
-        
-        # Append the other data_tables
-        other_sensors = [(CO2in, 'CO2in'), (CO2out, 'CO2out'), (NH3in, 'NH3in'),
-                         (NH3out, 'NH3out'), (Flow, 'Flow'), (Scale, 'Scale')]
-        for sensor, header in other_sensors:
-            if sensor is not None:
-                data_frame = pd.DataFrame(sensor.data_table, columns=[header + '[{}]'.format(sensor.unit)])
+
+            else:
+                # Distinguish cases for header of temperature and relative humidity sensors
+                if 'TrH' in sensor_name:
+                    split_strings = sensor_name.split('TrH', 1)  # Split the string after 'TrH', maximum 1 split
+                    temp_header = 'T' + split_strings[1] + '[°C]'
+                    rh_header = 'rH' + split_strings[1] + '[%]'
+                    header = [temp_header, rh_header]
+                else:
+                    header = [sensor_name]
+
+                data_frame = pd.DataFrame(columns=header)
                 data_frames.append(data_frame)
 
         # Concatenate data frames
@@ -81,4 +95,3 @@ class Saver:
             data_frame = pd.concat([clock_data_frame, thermero_data_frame], axis=1)
             file_name = self.name + "_Thermero"
             self.generate_csv(data_frame, file_name)
-            

@@ -35,11 +35,11 @@ data['Time'] = pd.to_datetime(data['Time'], format='%Y_%m_%d_%H_%M_%S')
 # Ask for the time for the image
 valid_time = False
 while not valid_time:
-    time_image = input("Enter the time for the image (format: YYYY-MM-DD HH:MM:SS): ")
+    time_image = input("Enter the time for the image (format: YYYY_MM_DD_HH_MM_SS): ")
 
     try:
         # Convert time_image into datetime object
-        time_image = pd.to_datetime(time_image)
+        time_image = pd.to_datetime(time_image, format='%Y_%m_%d_%H_%M_%S')
 
         if (data['Time'].iloc[0] <= time_image <= data['Time'].iloc[-1]):
             valid_time = True
@@ -47,7 +47,7 @@ while not valid_time:
             print("Invalid range! Please enter a time that is between the ranges of time of the file.")
 
     except ValueError:
-        print("Invalid format! Please enter the range in the format: YYYY-MM-DD HH:MM:SS")
+        print("Invalid format! Please enter the range in the format: YYYY_MM_DD_HH_MM_SS")
 
 # Find the closest time in the data to the given time_image
 closest_time = data['Time'].iloc[(data['Time'] - time_image).abs().argsort()[0]]
@@ -81,4 +81,14 @@ update_frame(0)  # Only a single frame, so use index 0
 
 # Save the final image
 save_name = file_name_without_extension + '_Image.png'  # Set the output file name
-plt.savefig(save_name)
+
+# Define the save directory path
+save_dir = os.path.join(os.getcwd(), '..', 'Images')
+
+# Create the save directory if it doesn't exist
+if not os.path.exists(save_dir):
+    os.makedirs(save_dir)
+
+# Save animation with a dynamic file name in the specified folder
+save_path = os.path.join(save_dir, save_name)
+plt.savefig(save_path)
