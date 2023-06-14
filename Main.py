@@ -68,7 +68,7 @@ overview_sensor_dict["TrHcool"]["sensor"] = TrHcool
 print("Clock:")
 RTClock = RTC_DS1307("RTClock")
 overview_sensor_dict["RTClock"]["sensor"] = RTClock
-RTClock.set_time()
+# RTClock.set_time()
 
 print("Other sensors:")
 # Inlet CO2

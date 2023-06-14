@@ -84,7 +84,9 @@ class RTC_DS1307(Sensor):
             except ValueError:
                 print("Invalid format! Please enter the range in the format: YYYY_MM_DD_HH_MM_SS")
 
-        # current_time = time.struct_time((2023, 6, 12, 11, 57, 10, 3, -1, -1))
+        current_t = time.struct_time((2023, 6, 12, 11, 57, 10, 3, -1, -1))
+        print(current_t)
+        print(current_time)
         self.sensor.datetime = current_time
         
     def read_data(self):
