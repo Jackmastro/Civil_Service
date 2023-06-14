@@ -262,9 +262,7 @@ finally:
     # NOT GPIO.cleanup(), the heater and cooler will turn on!
     print("--- CLEANUP COMPLETED ---")
     print("--- SAVING LAST DATA STARTED ---")
-#     for i in range(0,2):
-#         saver.append_data(overview_sensor_dict)
-#         time.sleep(3)
+    saver.append_data(overview_sensor_dict)
     print("--- SAVING LAST DATA COMPLETED ---")
     print("--- CSV GENERATION STARTED ---")
     saver.save_sensor_data(overview_sensor_dict)
