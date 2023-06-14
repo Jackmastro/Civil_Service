@@ -4,6 +4,7 @@ import RPi.GPIO as GPIO
 import pandas as pd
 import numpy as np
 import board
+import datetime
 import time
 import math
 
@@ -78,16 +79,14 @@ class RTC_DS1307(Sensor):
             time_input = input("Enter the current time (format: YYYY_MM_DD_HH_MM_SS): ")
 
             try:
-                current_time = pd.to_datetime(time_input, format='%Y_%m_%d_%H_%M_%S')
+                current_time = datetime.datetime.strptime(time_input, '%Y_%m_%d_%H_%M_%S').timetuple()
                 valid_time = True
 
             except ValueError:
-                print("Invalid format! Please enter the range in the format: YYYY_MM_DD_HH_MM_SS")
+                print("Invalid format! Please enter the time in the format: YYYY_MM_DD_HH_MM_SS")
 
-        current_t = time.struct_time((2023, 6, 12, 11, 57, 10, 3, -1, -1))
-        print(current_t)
-        print(current_time)
         self.sensor.datetime = current_time
+        print(current_time)
         
     def read_data(self):
         return self.read_data_point()
