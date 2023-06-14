@@ -36,7 +36,8 @@ data['Time'] = pd.to_datetime(data['Time'], format='%Y_%m_%d_%H_%M_%S')
 
 # Ask for lower and higher ranges
 valid_range = False
-while not valid_range:
+valid_time = False
+while not valid_range or not valid_time:
     lower_range = input("Enter the lower range (format: YYYY_MM_DD_HH_MM_SS): ")
     upper_range = input("Enter the upper range (format: YYYY_MM_DD_HH_MM_SS): ")
 
@@ -54,14 +55,15 @@ while not valid_range:
             valid_time = True
         else:
             print("Invalid range! Please enter a lower range that is between the ranges of time of the file.")
-        
+
         if (data['Time'].iloc[0] <= upper_range <= data['Time'].iloc[-1]):
             valid_time = True
         else:
-            print("Invalid range! Please enter a upper range that is between the ranges of time of the file.")
+            print("Invalid range! Please enter an upper range that is between the ranges of time of the file.")
 
     except ValueError:
         print("Invalid format! Please enter the range in the format: YYYY_MM_DD_HH_MM_SS")
+
 
 # Cut the data within the specified range
 data = data.loc[(data['Time'] >= lower_range) & (data['Time'] <= upper_range)]
@@ -91,9 +93,6 @@ def update_frame(frame):
 # Create animation
 ani = animation.FuncAnimation(fig, update_frame, frames=len(data), interval=200)
 
-# Save animation with a dynamic file name
-save_name = file_name_without_extension + '_GIF.gif'  # Set the output file name
-
 # Define the save directory path
 save_dir = os.path.join(os.getcwd(), '..', 'GIFs')
 
@@ -101,8 +100,33 @@ save_dir = os.path.join(os.getcwd(), '..', 'GIFs')
 if not os.path.exists(save_dir):
     os.makedirs(save_dir)
 
+# File name from user
+while True:
+    save_name_input = input("Type the file name without extension: ")
+    save_name = save_name_input.strip() + '.gif'
+    save_path = os.path.join(save_dir, save_name)
+
+    if not save_name_input:
+        print("Empty file name. Please enter a valid file name.")
+        continue
+
+    if os.path.exists(save_path):
+        overwrite_input = input("File '{}' already exists. Do you want to overwrite it? [y/n] ".format(save_name))
+        if overwrite_input.lower() != 'y':
+            print("File not overwritten. Please choose a different file name.")
+            continue
+
+    try:
+        with open(save_path, 'w'):
+            pass
+    except IOError:
+        print("Invalid file name. Please choose a valid file name.")
+        continue
+
+    print("File name set to {}.".format(save_name))
+    break
+
 # Save animation with a dynamic file name in the specified folder
-save_path = os.path.join(save_dir, save_name)
-ani.save(save_path, writer='pillow')  # Save the animation as a GIF
+ani.save(save_path, writer='pillow')
 
 print(f"File {save_name} correctly saved in {save_dir}.")

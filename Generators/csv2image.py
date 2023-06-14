@@ -80,9 +80,6 @@ def update_frame(frame):
 # Update the plot with the final frame
 update_frame(0)  # Only a single frame, so use index 0
 
-# Save the final image
-save_name = file_name_without_extension + '_Image.png'  # Set the output file name
-
 # Define the save directory path
 save_dir = os.path.join(os.getcwd(), '..', 'Images')
 
@@ -90,8 +87,33 @@ save_dir = os.path.join(os.getcwd(), '..', 'Images')
 if not os.path.exists(save_dir):
     os.makedirs(save_dir)
 
+# File name from user
+while True:
+    save_name_input = input("Type the file name without extension: ")
+    save_name = save_name_input.strip() + '.png'
+    save_path = os.path.join(save_dir, save_name)
+
+    if not save_name_input:
+        print("Empty file name. Please enter a valid file name.")
+        continue
+
+    if os.path.exists(save_path):
+        overwrite_input = input("File '{}' already exists. Do you want to overwrite it? [y/n] ".format(save_name))
+        if overwrite_input.lower() != 'y':
+            print("File not overwritten. Please choose a different file name.")
+            continue
+
+    try:
+        with open(save_path, 'w'):
+            pass
+    except IOError:
+        print("Invalid file name. Please choose a valid file name.")
+        continue
+
+    print("File name set to {}.".format(save_name))
+    break
+
 # Save animation with a dynamic file name in the specified folder
-save_path = os.path.join(save_dir, save_name)
 plt.savefig(save_path)
 
 print(f"File {save_name} correctly saved in {save_dir}.")

@@ -1,6 +1,5 @@
 # GENERAL IMPORT
 import RPi.GPIO as GPIO
-import datetime
 import time
 
 from LCD_Class import *
@@ -45,35 +44,58 @@ overview_sensor_dict = {
     "Scale":     {"is_connected": False, "sensor": None}
 }
 
-print("Needed to control the process:")
+print("Chips:")
 TCA = Multiplexer_TCA9548A("TCA")
+MCP = ADC_MCP3008("MCP")
+
+print("Needed to control the process:")
+# Inlet temperature and relative humidity
 TrHin = TrH_AM2315C("TrHin", TCA)
 overview_sensor_dict["TrHin"]["sensor"] = TrHin
+# Outlet temperature and relative humidity
 TrHout = TrH_AM2315C("TrHout", TCA)
 overview_sensor_dict["TrHout"]["sensor"] = TrHout
+
+# Ambient temperature and relative humidity
 TrHamb = TrH_AM2315C("TrHamb", TCA)
 overview_sensor_dict["TrHamb"]["sensor"] = TrHamb
+
+# After cooler temperature and relative humidity
 TrHcool = TrH_AM2315C("TrHcool", TCA)
 overview_sensor_dict["TrHcool"]["sensor"] = TrHcool
-print("Other sensors:")
+
+# Clock
 print("Clock:")
 RTClock = RTC_DS1307("RTClock")
 overview_sensor_dict["RTClock"]["sensor"] = RTClock
+RTClock.set_time()
+
+print("Other sensors:")
+# Inlet CO2
 CO2in = CO2_SCD30("CO2in", TCA)
 overview_sensor_dict["CO2in"]["sensor"] = CO2in
+
+# Outlet CO2
 CO2out = CO2_SCD30("CO2out", TCA)
 overview_sensor_dict["CO2out"]["sensor"] = CO2out
+
+# Flow
 Flow = Flow_SFM3119("Flow")
 overview_sensor_dict["Flow"]["sensor"] = Flow
-MCP = ADC_MCP3008("MCP")
-NH3out = NH3_MQ137("NH3out", MCP)
-NH3out = None
-overview_sensor_dict["NH3out"]["sensor"] = NH3out
+
+# Inlet NH3
 NH3in = NH3_MQ137("NH3in", MCP)
-# NH3in = None
 overview_sensor_dict["NH3out"]["sensor"] = NH3in
+
+# Outlet NH3
+NH3out = NH3_MQ137("NH3out", MCP)
+NH3out = None ############################## Hardware problem
+overview_sensor_dict["NH3out"]["sensor"] = NH3out
+
+# LCD screen
 print("Screen:")
 lcd = LCD_HD44780("LCD")
+
 print("Choosable sensors:")
 # Scale
 if is_connected("Scale"):
@@ -82,6 +104,7 @@ if is_connected("Scale"):
     overview_sensor_dict["Scale"]["sensor"] = Scale
 else:
     Scale = None
+    
 # IR camera
 if is_connected("IRcamera"):
     overview_sensor_dict["IRcamera"]["is_connected"] = True
@@ -89,6 +112,7 @@ if is_connected("IRcamera"):
     overview_sensor_dict["IRcamera"]["sensor"] = IRcamera
 else:
     IRcamera = None
+
 # Thermero
 if is_connected("Thermero"):
     overview_sensor_dict["Thermero"]["is_connected"] = True

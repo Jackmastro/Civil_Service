@@ -1,6 +1,7 @@
 # General imports
 from abc import ABC, abstractmethod
 import RPi.GPIO as GPIO
+import pandas as pd
 import numpy as np
 import board
 import time
@@ -70,6 +71,21 @@ class RTC_DS1307(Sensor):
         self.sensor = adafruit_ds1307.DS1307(i2c)
         
         print(f"Setup for {self.name} successfully completed.")
+
+    def set_time(self) -> None:
+        valid_time = False
+        while not valid_time:
+            time_input = input("Enter the current time (format: YYYY_MM_DD_HH_MM_SS): ")
+
+            try:
+                current_time = pd.to_datetime(time_input, format='%Y_%m_%d_%H_%M_%S')
+                valid_time = True
+
+            except ValueError:
+                print("Invalid format! Please enter the range in the format: YYYY_MM_DD_HH_MM_SS")
+
+        # current_time = time.struct_time((2023, 6, 12, 11, 57, 10, 3, -1, -1))
+        self.sensor.datetime = current_time
         
     def read_data(self):
         return self.read_data_point()
