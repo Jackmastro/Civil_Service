@@ -6,17 +6,19 @@ import board
 import time
 import math
 
+# Sensors from Adafruit https://pypi.org/project/Adafruit-Blinka/
+
 # Import the Chip abstract class
 from Chip_Class import *
 # Import the LCD class
 from LCD_Class import *
-# CO2 SCD30 library https://github.com/adafruit/Adafruit_CircuitPython_SCD30
+# CO2 SCD30 library https://github.com/adafruit/Adafruit_CircuitPython_SCD30 (https://pypi.org/project/adafruit-circuitpython-scd30/)
 import adafruit_scd30
-# TrH AM2320 library https://learn.adafruit.com/am2315-encased-i2c-temperature-humidity-sensor/python-circuitpython
+# TrH AM2315C library https://pypi.org/project/adafruit-circuitpython-ahtx0/
 import adafruit_ahtx0
-# IR MLX90640 library https://github.com/adafruit/Adafruit_CircuitPython_MLX90640
+# IR MLX90640 library https://github.com/adafruit/Adafruit_CircuitPython_MLX90640 (https://pypi.org/project/adafruit-circuitpython-mlx90640/)
 import adafruit_mlx90640
-# RTC Real Time Cloack DS1307 library https://docs.circuitpython.org/projects/ds1307/en/latest/index.html
+# RTC Real Time Cloack DS1307 library https://docs.circuitpython.org/projects/ds1307/en/latest/index.html (https://pypi.org/project/adafruit-circuitpython-ds1307/)
 import adafruit_ds1307
 # Flow SFM3119 library https://github.com/Sensirion/python-i2c-sfm-sf06/blob/master/sensirion_i2c_sfm_sf06
 import argparse
