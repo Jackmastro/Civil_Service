@@ -1,4 +1,4 @@
-# Flow SFM3119 library https://github.com/Sensirion/python-i2c-sfm-sf06/blob/master/sensirion_i2c_sfm_sf06
+# Flow SFM3119 library https://sensirion.github.io/python-i2c-sfm-sf06/ (https://github.com/Sensirion/python-i2c-sfm-sf06/blob/master/sensirion_i2c_sfm_sf06)
 # sudo i2cdetect -y 1 (0x29)
 import argparse
 import time
