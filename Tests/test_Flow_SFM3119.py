@@ -42,9 +42,6 @@ try:
               )
     
 except KeyboardInterrupt:
-    Suct_fans.off()
-    Suct_fans.close()
-    sensor.stop_continuous_measurement()
     print("You have successfully interrupted the programm.")
 
 finally:
