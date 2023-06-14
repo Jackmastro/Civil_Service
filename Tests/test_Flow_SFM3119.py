@@ -3,7 +3,9 @@
 import argparse
 import time
 import numpy as np
+# https://pypi.org/project/sensirion-i2c-driver/
 from sensirion_i2c_driver import LinuxI2cTransceiver, I2cConnection, CrcCalculator
+# https://pypi.org/project/sensirion-driver-adapters/
 from sensirion_driver_adapters.i2c_adapter.i2c_channel import I2cChannel
 from sensirion_i2c_sfm_sf06.device import SfmSf06Device
 from gpiozero import OutputDevice
@@ -32,14 +34,17 @@ area = (0.0166 / 2)**2 * np.pi
 conversion = 1 / 16670
 try:
     while True:
+        time.sleep(5.0)
         (air_flow, air_temperature, _) = sensor.read_measurement_data()
         print(f"Air flow: {air_flow} L/min \n"
               f"Air flow: {air_flow.value * conversion / area} m/s \n"
               f"Air temperature: {air_temperature}° \n"
               )
-        time.sleep(5.0)
     
-except KeyboardInterrupt: 
+except KeyboardInterrupt:
+    Suct_fans.off()
+    Suct_fans.close()
+    sensor.stop_continuous_measurement()
     print("You have successfully interrupted the programm.")
 
 finally:
