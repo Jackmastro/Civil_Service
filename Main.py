@@ -68,7 +68,7 @@ overview_sensor_dict["TrHcool"]["sensor"] = TrHcool
 print("Clock:")
 RTClock = RTC_DS1307("RTClock")
 overview_sensor_dict["RTClock"]["sensor"] = RTClock
-# RTClock.set_time()
+RTClock.set_time()
 
 print("Other sensors:")
 # Inlet CO2
@@ -104,7 +104,7 @@ if is_connected("Scale"):
     overview_sensor_dict["Scale"]["sensor"] = Scale
 else:
     Scale = None
-    
+
 # IR camera
 if is_connected("IRcamera"):
     overview_sensor_dict["IRcamera"]["is_connected"] = True
