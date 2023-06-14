@@ -1,5 +1,5 @@
 # TO INSTALL on RPi: 
-#   - AM2320 library https://learn.adafruit.com/am2315-encased-i2c-temperature-humidity-sensor/python-circuitpython
+#   - AM2320 library https://pypi.org/project/adafruit-circuitpython-ahtx0/
 #   - TCA9548A library https://github.com/adafruit/Adafruit_CircuitPython_TCA9548A
 
 import board

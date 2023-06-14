@@ -2,9 +2,9 @@
 from abc import ABC, abstractmethod
 import board
 
-# Multiplexer TCA9548A library https://github.com/adafruit/Adafruit_CircuitPython_TCA9548A
+# Multiplexer TCA9548A library https://github.com/adafruit/Adafruit_CircuitPython_TCA9548A (https://pypi.org/project/adafruit-circuitpython-tca9548a/)
 import adafruit_tca9548a
-# Analog-to-Digital Converter MCP3008 library https://https://github.com/adafruit/Adafruit_CircuitPython_MCP3xxx
+# Analog-to-Digital Converter MCP3008 library https://github.com/adafruit/Adafruit_CircuitPython_MCP3xxx (https://pypi.org/project/adafruit-circuitpython-mcp3xxx/)
 import digitalio
 import adafruit_mcp3xxx.mcp3008 as mcp3008
 from adafruit_mcp3xxx.analog_in import AnalogIn as analog_in
