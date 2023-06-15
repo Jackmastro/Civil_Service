@@ -215,14 +215,17 @@ class Flow_SFM3119(Sensor):
         
         # Get value from pointers
         temperature_value = air_temperature.value
-        flow_value_Lmin = air_flow.value
+        flow_value_CFM = air_flow.value
+
+        # Conversion CFM (Cubic Feet per Minute) to SLM (Standard Liter Minute)
+        flow_value_SLM = flow_value_CFM * 28.316847
 
         # Filter only positive values
-        if flow_value_Lmin < 0:
-            flow_value_Lmin = 0
+        if flow_value_SLM < 0:
+            flow_value_SLM = 0
         
         if type == "L/min":
-            data = [np.round(flow_value_Lmin, 2), np.round(temperature_value, 2)]
+            data = [np.round(flow_value_SLM, 2), np.round(temperature_value, 2)]
             return data
         
         elif type == "m/s":
@@ -230,7 +233,7 @@ class Flow_SFM3119(Sensor):
             
             # Perform conversion from L/min to m/s
             area = (0.0166 / 2)**2 * np.pi # Taken from datasheet
-            flow_value_ms = flow_value_Lmin / (area * 16670)
+            flow_value_ms = flow_value_SLM / (area * 16670)
             data = [np.round(flow_value_ms, 2), np.round(temperature_value, 2)]
             return data
         else:
