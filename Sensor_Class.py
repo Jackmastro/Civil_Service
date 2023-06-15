@@ -86,7 +86,6 @@ class RTC_DS1307(Sensor):
                 print("Invalid format! Please enter the time in the format: YYYY_MM_DD_HH_MM_SS")
 
         self.sensor.datetime = current_time
-        print(current_time)
         
     def read_data(self):
         return self.read_data_point()

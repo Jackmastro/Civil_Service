@@ -104,7 +104,7 @@ if is_connected("Scale"):
     overview_sensor_dict["Scale"]["sensor"] = Scale
 else:
     Scale = None
-    
+
 # IR camera
 if is_connected("IRcamera"):
     overview_sensor_dict["IRcamera"]["is_connected"] = True
