@@ -372,7 +372,12 @@ class Thermero_DS18B20(Sensor):
         print(f"Setup for {self.name} successfully completed.")
 
     def read_data(self):
-        data = [single_sensor.get_temperature() for single_sensor in self.sensor]
+#         data = [single_sensor.get_temperature() for single_sensor in self.sensor]
+        data = []
+        for single_sensor in self.sensor:
+            data.append(single_sensor.get_temperature())
+            time.sleep(0.1)
+            
         data = np.ravel(data) # Flatten to 1x20
         
         data_ordered = np.zeros(20)  # 20 sensors in total
