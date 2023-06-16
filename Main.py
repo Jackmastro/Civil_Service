@@ -85,6 +85,7 @@ overview_sensor_dict["Flow"]["sensor"] = Flow
 
 # Inlet NH3
 NH3in = NH3_MQ137("NH3in", MCP)
+NH3in = None ############################## Hardware problem
 overview_sensor_dict["NH3out"]["sensor"] = NH3in
 
 # Outlet NH3
