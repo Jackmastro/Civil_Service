@@ -32,12 +32,17 @@ class Saver:
 
         for sensor_name in overview_sensor_dict.keys():
             if overview_sensor_dict[sensor_name]["is_connected"] and overview_sensor_dict[sensor_name]["sensor"] is not None:
+
                 # Distinguish cases for header of temperature and relative humidity sensors
                 if 'TrH' in sensor_name:
                     split_strings = sensor_name.split('TrH', 1)  # Split the string after 'TrH', maximum 1 split
                     temp_header = 'T' + split_strings[1] + '[°C]'
                     rh_header = 'rH' + split_strings[1] + '[%]'
                     header = [temp_header, rh_header]
+
+                # Distinguish case for Real Time Clock
+                elif 'RTC' in sensor_name:
+                    header = ['Time']
                 else:
                     header = [sensor_name + '[{}]'.format(overview_sensor_dict[sensor_name]["sensor"].unit)]
                 
@@ -57,6 +62,10 @@ class Saver:
                     temp_header = 'T' + split_strings[1] + '[°C]'
                     rh_header = 'rH' + split_strings[1] + '[%]'
                     header = [temp_header, rh_header]
+                    
+                # Distinguish case for Real Time Clock
+                elif 'RTC' in sensor_name:
+                    header = ['Time']
                 else:
                     header = [sensor_name]
 

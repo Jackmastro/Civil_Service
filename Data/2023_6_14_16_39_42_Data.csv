@@ -1,4 +1,4 @@
-RTClock[time],Tamb[°C],rHamb[%],Tcool[°C],rHcool[%],Tin[°C],rHin[%],Thermero[°C],IRcamera[°C],Tout[°C],rHout[%],CO2in[ppm],CO2out[ppm],NH3in,NH3out,Flow[L/min],Scale[g]
+Time,Tamb[°C],rHamb[%],Tcool[°C],rHcool[%],Tin[°C],rHin[%],Thermero[°C],IRcamera[°C],Tout[°C],rHout[%],CO2in[ppm],CO2out[ppm],NH3in,NH3out,Flow[L/min],Scale[g]
 2023_6_14_16_40_49,21.05,34.32,28.59,21.91,52.85,2.95,25.35,28.32,23.99,28.33,1009.14,710.38,,,14.02,3407.18
 2023_6_14_16_42_13,20.84,34.61,26.7,23.89,50.91,3.74,25.5,28.29,23.88,28.46,1007.58,723.44,,,14.4,3407.07
 2023_6_14_16_43_36,20.62,34.81,25.25,26.0,48.48,4.74,25.64,28.22,23.77,28.55,1006.86,735.55,,,14.06,3407.61
